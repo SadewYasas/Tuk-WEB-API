@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
+const tukTukRoutes = require('./routes/tukTukRoutes');
 
 // Load environment variables
 dotenv.config();
@@ -17,6 +18,9 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.send('API is running...');
 });
+
+// Use TukTuk routes
+app.use('/api/tuk-tuks', tukTukRoutes);
 
 const PORT = process.env.PORT || 5000;
 
