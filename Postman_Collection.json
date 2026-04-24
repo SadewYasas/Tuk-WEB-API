@@ -1,0 +1,260 @@
+{
+  "info": {
+    "name": "Tuk-Tuk Tracking API",
+    "description": "Real-Time Three-Wheeler Tracking & Movement Logging System for Sri Lanka Police",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"police_officer_001\",\n  \"email\": \"officer@police.lk\",\n  \"password\": \"SecurePass123!\",\n  \"role\": \"police_officer\",\n  \"province\": \"Western\",\n  \"district\": \"Colombo\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/auth/register",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"officer@police.lk\",\n  \"password\": \"SecurePass123!\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/auth/login",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/auth/profile",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "auth", "profile"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tuk-Tuk Management",
+      "item": [
+        {
+          "name": "Register Tuk-Tuk (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"registrationNumber\": \"WB-ABC-1234\",\n  \"ownerName\": \"Tuk Owner Name\",\n  \"province\": \"Western\",\n  \"district\": \"Colombo\",\n  \"lastKnownLocation\": {\n    \"latitude\": 6.9271,\n    \"longitude\": 80.7789\n  }\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/tuk-tuks/register",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "tuk-tuks", "register"]
+            }
+          }
+        },
+        {
+          "name": "Get All Tuk-Tuks",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/tuk-tuks",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "tuk-tuks"]
+            }
+          }
+        },
+        {
+          "name": "Get Tuk-Tuk by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/tuk-tuks/{{tuk_tuk_id}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "tuk-tuks", "{{tuk_tuk_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Filter by Province",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/tuk-tuks/filter/province/Western",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "tuk-tuks", "filter", "province", "Western"]
+            }
+          }
+        },
+        {
+          "name": "Filter by District",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/tuk-tuks/filter/district/Colombo",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "tuk-tuks", "filter", "district", "Colombo"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Real-Time Tracking",
+      "item": [
+        {
+          "name": "Update Tuk-Tuk Location",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"latitude\": 6.9275,\n  \"longitude\": 80.7795,\n  \"speed\": 45,\n  \"accuracy\": 5\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/tuk-tuks/{{tuk_tuk_id}}/update-location",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "tuk-tuks", "{{tuk_tuk_id}}", "update-location"]
+            }
+          }
+        },
+        {
+          "name": "Get Movement History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/tuk-tuks/{{tuk_tuk_id}}/movement-history?startDate=2026-04-20&endDate=2026-04-25",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "tuk-tuks", "{{tuk_tuk_id}}", "movement-history"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2026-04-20"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2026-04-25"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tuk_tuk_id",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
