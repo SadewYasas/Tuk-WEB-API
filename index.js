@@ -4,6 +4,11 @@ const connectDB = require('./config/db');
 const tukTukRoutes = require('./routes/tukTukRoutes');
 const authRoutes = require('./routes/authRoutes');
 
+// Import middleware
+const setHttpHeaders = require('./middleware/headers');
+const standardizeResponse = require('./middleware/response');
+const errorHandler = require('./middleware/errorHandler');
+
 // Load environment variables
 dotenv.config();
 
@@ -12,19 +17,42 @@ connectDB();
 
 const app = express();
 
-// Middleware to parse JSON
+// Global middleware stack
+// 1. Set HTTP headers (must be before other middleware)
+app.use(setHttpHeaders);
+
+// 2. Parse JSON
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// 3. Standardize responses
+app.use(standardizeResponse);
 
 // Define a basic route
 app.get('/', (req, res) => {
-  res.send('Tuk-Tuk Tracking API is running...');
+  res.status(200).json({ message: 'Tuk-Tuk Tracking API is running...' });
 });
 
-// Use Auth routes
-app.use('/api/auth', authRoutes);
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ message: 'Server is healthy', timestamp: new Date() });
+});
 
-// Use TukTuk routes
+// API Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/tuk-tuks', tukTukRoutes);
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({
+    message: 'Route not found',
+    error: 'NOT_FOUND',
+    path: req.path,
+  });
+});
+
+// Error handler (must be last)
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 

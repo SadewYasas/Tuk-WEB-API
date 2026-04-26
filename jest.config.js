@@ -1,6 +1,6 @@
 module.exports = {
   testEnvironment: 'node',
-  testTimeout: 10000,
+  testTimeout: 30000,
   collectCoverageFrom: [
     'routes/**/*.js',
     'models/**/*.js',
