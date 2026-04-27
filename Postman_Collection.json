@@ -20,7 +20,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"username\": \"police_officer_001\",\n  \"email\": \"officer@police.lk\",\n  \"password\": \"SecurePass123!\",\n  \"role\": \"police_officer\",\n  \"province\": \"Western\",\n  \"district\": \"Colombo\"\n}"
+              "raw": "{\n  \"username\": \"policeofficer001\",\n  \"email\": \"officer@police.lk\",\n  \"password\": \"SecurePass123!\",\n  \"role\": \"police_officer\",\n  \"province\": \"Western\",\n  \"district\": \"Colombo\"\n}"
             },
             "url": {
               "raw": "http://localhost:5000/api/auth/register",

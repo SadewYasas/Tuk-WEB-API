@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 const TukTuk = require('../models/TukTuk');
 const LocationHistory = require('../models/LocationHistory');
 const tukTukRoutes = require('../routes/tukTukRoutes');
+const standardizeResponse = require('../middleware/response');
 const { authMiddleware } = require('../middleware/auth');
 
 dotenv.config();
@@ -42,6 +43,7 @@ describe('Advanced Querying - Filtering, Sorting, and Pagination', () => {
 
     app = express();
     app.use(express.json());
+    app.use(standardizeResponse);
     app.use('/api/tuk-tuks', tukTukRoutes);
   });
 

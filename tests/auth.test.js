@@ -4,11 +4,13 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const User = require('../models/User');
 const authRoutes = require('../routes/authRoutes');
+const standardizeResponse = require('../middleware/response');
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(standardizeResponse);
 app.use('/api/auth', authRoutes);
 
 // Connect to test database
@@ -49,8 +51,9 @@ describe('Authentication Routes', () => {
         });
 
       expect(response.status).toBe(201);
+      expect(response.body).toHaveProperty('success', true);
       expect(response.body).toHaveProperty('message', 'User registered successfully');
-      expect(response.body).toHaveProperty('userId');
+      expect(response.body.data).toHaveProperty('userId');
     });
 
     test('Should return 400 if required fields are missing', async () => {
@@ -63,7 +66,9 @@ describe('Authentication Routes', () => {
         });
 
       expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('message', 'All fields are required');
+      expect(response.body).toHaveProperty('success', false);
+      expect(response.body).toHaveProperty('error', 'Validation failed');
+      expect(response.body).toHaveProperty('details');
     });
 
     test('Should not register user with duplicate email', async () => {
@@ -90,7 +95,8 @@ describe('Authentication Routes', () => {
         });
 
       expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('message', 'User already exists');
+      expect(response.body).toHaveProperty('success', false);
+      expect(response.body).toHaveProperty('error', 'User already exists');
     });
 
     test('Should not register user with duplicate username', async () => {
@@ -115,7 +121,8 @@ describe('Authentication Routes', () => {
         });
 
       expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('message', 'User already exists');
+      expect(response.body).toHaveProperty('success', false);
+      expect(response.body).toHaveProperty('error', 'User already exists');
     });
 
     test('Should set default role to police_officer if not provided', async () => {
@@ -130,7 +137,7 @@ describe('Authentication Routes', () => {
         });
 
       expect(response.status).toBe(201);
-      const user = await User.findById(response.body.userId);
+      const user = await User.findById(response.body.data.userId);
       expect(user.role).toBe('police_officer');
     });
   });
@@ -159,9 +166,10 @@ describe('Authentication Routes', () => {
         });
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('token');
-      expect(response.body.user).toHaveProperty('username', 'loginuser');
-      expect(response.body.user).toHaveProperty('role', 'police_officer');
+      expect(response.body).toHaveProperty('success', true);
+      expect(response.body.data).toHaveProperty('token');
+      expect(response.body.data.user).toHaveProperty('username', 'loginuser');
+      expect(response.body.data.user).toHaveProperty('role', 'police_officer');
     });
 
     test('Should return 401 for invalid credentials', async () => {
@@ -173,7 +181,8 @@ describe('Authentication Routes', () => {
         });
 
       expect(response.status).toBe(401);
-      expect(response.body).toHaveProperty('message', 'Invalid credentials');
+      expect(response.body).toHaveProperty('success', false);
+      expect(response.body).toHaveProperty('error', 'Invalid credentials');
     });
 
     test('Should return 401 if user does not exist', async () => {
@@ -185,7 +194,8 @@ describe('Authentication Routes', () => {
         });
 
       expect(response.status).toBe(401);
-      expect(response.body).toHaveProperty('message', 'Invalid credentials');
+      expect(response.body).toHaveProperty('success', false);
+      expect(response.body).toHaveProperty('error', 'Invalid credentials');
     });
 
     test('Should return 400 if email or password is missing', async () => {
@@ -197,7 +207,9 @@ describe('Authentication Routes', () => {
         });
 
       expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('message', 'Email and password are required');
+      expect(response.body).toHaveProperty('success', false);
+      expect(response.body).toHaveProperty('error', 'Validation failed');
+      expect(response.body).toHaveProperty('details');
     });
 
     test('JWT token should contain user role, province, and district', async () => {
@@ -209,7 +221,7 @@ describe('Authentication Routes', () => {
         });
 
       expect(response.status).toBe(200);
-      const token = response.body.token;
+      const token = response.body.data.token;
       const decoded = require('jsonwebtoken').decode(token);
       expect(decoded).toHaveProperty('role', 'police_officer');
       expect(decoded).toHaveProperty('province', 'Western');
@@ -240,7 +252,7 @@ describe('Authentication Routes', () => {
           email: 'profile@police.lk',
           password: 'Password123!',
         });
-      authToken = loginRes.body.token;
+      authToken = loginRes.body.data.token;
     });
 
     test('Should get authenticated user profile', async () => {
@@ -249,10 +261,11 @@ describe('Authentication Routes', () => {
         .set('Authorization', `Bearer ${authToken}`);
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('username', 'profileuser');
-      expect(response.body).toHaveProperty('email', 'profile@police.lk');
-      expect(response.body).toHaveProperty('role', 'admin');
-      expect(response.body).not.toHaveProperty('password');
+      expect(response.body).toHaveProperty('success', true);
+      expect(response.body.data).toHaveProperty('username', 'profileuser');
+      expect(response.body.data).toHaveProperty('email', 'profile@police.lk');
+      expect(response.body.data).toHaveProperty('role', 'admin');
+      expect(response.body.data).not.toHaveProperty('password');
     });
 
     test('Should return 401 without token', async () => {
@@ -260,7 +273,8 @@ describe('Authentication Routes', () => {
         .get('/api/auth/profile');
 
       expect(response.status).toBe(401);
-      expect(response.body).toHaveProperty('message', 'No token provided');
+      expect(response.body).toHaveProperty('success', false);
+      expect(response.body).toHaveProperty('error', 'No token provided');
     });
 
     test('Should return 401 with invalid token', async () => {
@@ -269,7 +283,8 @@ describe('Authentication Routes', () => {
         .set('Authorization', 'Bearer invalid.token.here');
 
       expect(response.status).toBe(401);
-      expect(response.body).toHaveProperty('message', 'Invalid or expired token');
+      expect(response.body).toHaveProperty('success', false);
+      expect(response.body).toHaveProperty('error', 'Invalid or expired token');
     });
 
     test('Should not return password field in profile', async () => {
@@ -278,7 +293,7 @@ describe('Authentication Routes', () => {
         .set('Authorization', `Bearer ${authToken}`);
 
       expect(response.status).toBe(200);
-      expect(response.body).not.toHaveProperty('password');
+      expect(response.body.data).not.toHaveProperty('password');
     });
   });
 });

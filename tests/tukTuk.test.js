@@ -7,12 +7,14 @@ const TukTuk = require('../models/TukTuk');
 const LocationHistory = require('../models/LocationHistory');
 const authRoutes = require('../routes/authRoutes');
 const tukTukRoutes = require('../routes/tukTukRoutes');
+const standardizeResponse = require('../middleware/response');
 const jwt = require('jsonwebtoken');
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(standardizeResponse);
 app.use('/api/auth', authRoutes);
 app.use('/api/tuk-tuks', tukTukRoutes);
 
@@ -54,7 +56,7 @@ beforeAll(async () => {
         email: 'admin@police.lk',
         password: 'AdminPass123!',
       });
-    adminToken = adminRes.body.token;
+    adminToken = adminRes.body.data.token;
 
     const officerRes = await request(app)
       .post('/api/auth/login')
@@ -62,7 +64,7 @@ beforeAll(async () => {
         email: 'officer@police.lk',
         password: 'OfficerPass123!',
       });
-    officerToken = officerRes.body.token;
+    officerToken = officerRes.body.data.token;
   } catch (error) {
     console.error('Setup error:', error);
   }
@@ -99,8 +101,9 @@ describe('Tuk-Tuk Routes', () => {
         });
 
       expect(response.status).toBe(201);
-      expect(response.body).toHaveProperty('registrationNumber', 'ABC-1234');
-      expect(response.body).toHaveProperty('province', 'Western');
+      expect(response.body).toHaveProperty('success', true);
+      expect(response.body.data).toHaveProperty('registrationNumber', 'ABC-1234');
+      expect(response.body.data).toHaveProperty('province', 'Western');
     });
 
     test('Should return 403 for non-admin users', async () => {
@@ -119,7 +122,8 @@ describe('Tuk-Tuk Routes', () => {
         });
 
       expect(response.status).toBe(403);
-      expect(response.body).toHaveProperty('message', 'Access denied');
+      expect(response.body).toHaveProperty('success', false);
+      expect(response.body).toHaveProperty('error', 'Access denied');
     });
 
     test('Should return 400 if required fields are missing', async () => {
@@ -132,7 +136,9 @@ describe('Tuk-Tuk Routes', () => {
         });
 
       expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('message', 'All required fields must be provided');
+      expect(response.body).toHaveProperty('success', false);
+      expect(response.body).toHaveProperty('error', 'Validation failed');
+      expect(response.body).toHaveProperty('details');
     });
 
     test('Should return 401 without token', async () => {
@@ -184,8 +190,9 @@ describe('Tuk-Tuk Routes', () => {
         .set('Authorization', `Bearer ${officerToken}`);
 
       expect(response.status).toBe(200);
-      expect(Array.isArray(response.body)).toBe(true);
-      expect(response.body.length).toBe(3);
+      expect(response.body).toHaveProperty('success', true);
+      expect(Array.isArray(response.body.data)).toBe(true);
+      expect(response.body.data.length).toBe(3);
     });
 
     test('Should return 401 without authentication', async () => {
@@ -217,8 +224,9 @@ describe('Tuk-Tuk Routes', () => {
         .set('Authorization', `Bearer ${officerToken}`);
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('registrationNumber', 'CAB-100');
-      expect(response.body).toHaveProperty('ownerName', 'TestOwner');
+      expect(response.body).toHaveProperty('success', true);
+      expect(response.body.data).toHaveProperty('registrationNumber', 'CAB-100');
+      expect(response.body.data).toHaveProperty('ownerName', 'TestOwner');
     });
 
     test('Should return 404 for non-existent tuk-tuk', async () => {
@@ -228,7 +236,8 @@ describe('Tuk-Tuk Routes', () => {
         .set('Authorization', `Bearer ${officerToken}`);
 
       expect(response.status).toBe(404);
-      expect(response.body).toHaveProperty('message', 'Tuk-tuk not found');
+      expect(response.body).toHaveProperty('success', false);
+      expect(response.body).toHaveProperty('error', 'Tuk-tuk not found');
     });
   });
 
@@ -266,9 +275,10 @@ describe('Tuk-Tuk Routes', () => {
         .set('Authorization', `Bearer ${officerToken}`);
 
       expect(response.status).toBe(200);
-      expect(Array.isArray(response.body)).toBe(true);
-      expect(response.body.length).toBe(2);
-      response.body.forEach((tuk) => {
+      expect(response.body).toHaveProperty('success', true);
+      expect(Array.isArray(response.body.data)).toBe(true);
+      expect(response.body.data.length).toBe(2);
+      response.body.data.forEach((tuk) => {
         expect(tuk.province).toBe('Western');
       });
     });
@@ -279,7 +289,8 @@ describe('Tuk-Tuk Routes', () => {
         .set('Authorization', `Bearer ${officerToken}`);
 
       expect(response.status).toBe(404);
-      expect(response.body).toHaveProperty('message', 'No tuk-tuks found in this province');
+      expect(response.body).toHaveProperty('success', false);
+      expect(response.body).toHaveProperty('error', 'No tuk-tuks found in this province');
     });
   });
 
@@ -317,9 +328,10 @@ describe('Tuk-Tuk Routes', () => {
         .set('Authorization', `Bearer ${officerToken}`);
 
       expect(response.status).toBe(200);
-      expect(Array.isArray(response.body)).toBe(true);
-      expect(response.body.length).toBe(2);
-      response.body.forEach((tuk) => {
+      expect(response.body).toHaveProperty('success', true);
+      expect(Array.isArray(response.body.data)).toBe(true);
+      expect(response.body.data.length).toBe(2);
+      response.body.data.forEach((tuk) => {
         expect(tuk.district).toBe('Colombo');
       });
     });
@@ -330,7 +342,8 @@ describe('Tuk-Tuk Routes', () => {
         .set('Authorization', `Bearer ${officerToken}`);
 
       expect(response.status).toBe(404);
-      expect(response.body).toHaveProperty('message', 'No tuk-tuks found in this district');
+      expect(response.body).toHaveProperty('success', false);
+      expect(response.body).toHaveProperty('error', 'No tuk-tuks found in this district');
     });
   });
 
@@ -361,8 +374,8 @@ describe('Tuk-Tuk Routes', () => {
         });
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('tukTuk');
-      expect(response.body.tukTuk).toHaveProperty('lastKnownLocation');
+      expect(response.body).toHaveProperty('success', true);
+      expect(response.body.data).toHaveProperty('lastKnownLocation');
 
       // Verify location was updated in DB
       const updatedTuk = await TukTuk.findById(tukTukId);
@@ -395,7 +408,9 @@ describe('Tuk-Tuk Routes', () => {
         });
 
       expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('message', 'Latitude and longitude are required');
+      expect(response.body).toHaveProperty('success', false);
+      expect(response.body).toHaveProperty('error', 'Validation failed');
+      expect(response.body).toHaveProperty('details');
     });
 
     test('Should return 404 for non-existent tuk-tuk', async () => {
@@ -409,7 +424,8 @@ describe('Tuk-Tuk Routes', () => {
         });
 
       expect(response.status).toBe(404);
-      expect(response.body).toHaveProperty('message', 'Tuk-tuk not found');
+      expect(response.body).toHaveProperty('success', false);
+      expect(response.body).toHaveProperty('error', 'Tuk-tuk not found');
     });
 
     test('Should record speed and accuracy in location history', async () => {

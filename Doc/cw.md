@@ -1,6 +1,5 @@
 
-Adithya Ekanayaka
-8:18 PM
+
 # **Comprehensive Coursework Guide: NB6007CEM Web API Development**
 
 **Program:** BSc (Hons) Computing (Coventry University) @ NIBM
