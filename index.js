@@ -251,17 +251,14 @@ const swaggerSpecTemplate = {
   },
 };
 
-const getSwaggerSpec = (req) => {
-  const baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get('host')}`;
-  return {
-    ...swaggerSpecTemplate,
-    servers: [
-      {
-        url: baseUrl,
-        description: 'API server',
-      },
-    ],
-  };
+const swaggerSpec = {
+  ...swaggerSpecTemplate,
+  servers: [
+    {
+      url: process.env.BASE_URL || `http://localhost:${PORT}`,
+      description: 'API server',
+    },
+  ],
 };
 
 // Global middleware stack
@@ -290,12 +287,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/tuk-tuks', tukTukRoutes);
 
 // Swagger docs endpoint
-app.use('/api/docs', swaggerUi.serve, (req, res, next) => {
-  const swaggerSpec = getSwaggerSpec(req);
-  return swaggerUi.setup(swaggerSpec, { explorer: true })(req, res, next);
-});
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
 app.get('/api/docs.json', (req, res) => {
-  res.json(getSwaggerSpec(req));
+  res.json(swaggerSpec);
 });
 
 // 404 handler
