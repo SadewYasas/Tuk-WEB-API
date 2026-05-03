@@ -1,0 +1,251 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{url}
+
+\onehalfspacing
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\thepage}
+\lhead{NB6007CEM Web API Development}
+\cfoot{Coventry University @ NIBM}
+
+\title{\textbf{Real-Time Three-Wheeler Tracking \& Movement Logging System\\ 
+Web API Development Report}}
+\author{BSc (Hons) Computing (Coventry University) @ NIBM}
+\date{April 2026}
+
+\begin{document}
+
+\maketitle
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{Business Requirements Analysis}
+
+\subsection{System Objectives and Scope}
+
+The Real-Time Three-Wheeler (Tuk-Tuk) Tracking and Movement Logging System is designed as a secure backend architecture to serve the Sri Lanka Police's operational requirements for monitoring and tracking commercial tuk-tuks across the nation. The system addresses a critical need for law enforcement agencies to maintain visibility over a significant transportation segment that operates in both urban and rural areas, providing real-time location data and historical movement patterns for investigation and operational transparency.
+
+The primary objective of this Web API is to establish a centralized platform that collects GPS-based location pings from registered tuk-tuks, stores these pings with temporal accuracy, and provides sophisticated querying capabilities to authorized personnel across multiple administrative levels. The system is designed to accommodate three distinct user roles: Central Administrators at Police Headquarters for national-level oversight and system management, Law Enforcement Users at regional police stations for district-level operations and vehicle monitoring, and Tuk-Tuk Operators or tracking devices for secure location data submission.
+
+The scope of this project encompasses the development of a RESTful Web API using Node.js and Express.js, with MongoDB as the persistent data store. The implementation includes role-based access control mechanisms, JWT-based stateless authentication, comprehensive input validation using Joi schemas, and standardized response formatting for consistency across all endpoints. The system is designed to handle advanced querying requirements including filtering by province and district, pagination with configurable page sizes, and multi-field sorting capabilities to support complex operational queries necessary for law enforcement investigations and vehicle tracking operations.
+
+\subsection{Functional Requirements}
+
+The system implements core functionality organized around three primary resource entities: Users, Tuk-Tuks, and Location History records. User authentication endpoints enable registration of new officers with role assignment (admin, police\_officer, or operator), secure login with JWT token generation, and profile retrieval with authentication verification. The authentication system enforces strict password requirements including uppercase, lowercase, and numeric characters to ensure security compliance and prevent weak credential usage.
+
+Tuk-Tuk management endpoints provide registration of new vehicles restricted to administrative users, retrieval of all registered tuk-tuks with pagination support, filtering capabilities by province and district for geographic-based operations, and retrieval of individual vehicle records by unique identifier. The location tracking functionality enables secure submission of GPS coordinates with timestamps, automatic creation of location history records linked to specific tuk-tuks, and retrieval of historical movement data for temporal analysis supporting investigative use cases.
+
+Advanced querying capabilities form a critical component of the functional specification. The system supports paginated result sets with configurable page sizes (maximum 100 records per page) to prevent memory exhaustion, multi-field sorting with ascending and descending order specification, and filtered queries combining province, district, and registration number criteria. Response structures include pagination metadata containing current page, total pages, has\_next, and has\_previous indicators, enabling clients to navigate large datasets efficiently. The API also returns filter and sort parameters in responses for transparency in query execution.
+
+\subsection{Non-Functional Requirements}
+
+Security represents the highest priority non-functional requirement for law enforcement applications. All endpoints except health checks and registration require JWT bearer token authentication, ensuring that unauthorized access is prevented. The system implements password hashing using bcryptjs with salt rounds configured for production security standards. The API enforces strict validation on all inputs using Joi schemas, preventing injection attacks and data integrity violations that could compromise the system or enable malicious access.
+
+Role-based access control ensures that administrative operations (tuk-tuk registration) and sensitive data access are restricted to authorized personnel based on their assigned roles. Law enforcement users can only view vehicles registered in their assigned districts, preventing unauthorized access to geographic areas outside their jurisdiction.
+
+Reliability and robustness requirements mandate graceful error handling with meaningful HTTP status codes and descriptive error messages. The system distinguishes between client errors (400, 401, 403, 404) indicating incorrect requests and server errors (500) indicating system failures, providing detailed error context in standardized response structures. Database connection resilience is implemented with automatic reconnection logic and proper connection pooling through Mongoose.
+
+Performance considerations establish appropriate response times under normal operational conditions, with pagination limiting result set sizes to prevent memory exhaustion and database overload. The API is designed to scale horizontally through stateless architecture and session-independent authentication, allowing multiple instances to be deployed behind a load balancer without shared state.
+
+\section{Design and Architecture}
+
+\subsection{Technology Stack Justification}
+
+The selection of Node.js as the runtime environment provides several architectural advantages for this application. Node.js offers event-driven, non-blocking I/O operations particularly well-suited for I/O-intensive operations such as database queries and API calls typical of tracking systems. The JavaScript ecosystem provides mature packages for authentication (jsonwebtoken, bcryptjs), validation (joi), and database interaction (mongoose), enabling rapid development without reinventing fundamental components.
+
+Express.js was selected as the web framework due to its minimalist approach, extensive middleware ecosystem, and widespread adoption in production environments. This provides flexibility in architecture while maintaining adherence to industry standards. Express's middleware pattern enables clean separation of concerns through modular function composition.
+
+MongoDB was chosen as the persistent data store based on its document-oriented data model, which naturally aligns with the hierarchical structure of location history records nested within tuk-tuk documents. The schema flexibility allows future extensions to location records without requiring database migrations that would be necessary with traditional relational databases. Mongoose ODM provides additional benefits including schema validation at the application layer, middleware hooks for pre-save processing, and automatic connection management.
+
+\subsection{API Architecture and Design Patterns}
+
+The API architecture follows RESTful principles with resources organized around the core domain entities. HTTP verbs (GET, POST, PUT, DELETE) are used semantically to represent operations on resources according to REST standards. The API structure organizes endpoints into logical routes: \texttt{/api/auth} for authentication operations and \texttt{/api/tuk-tuks} for vehicle management and tracking, enabling intuitive navigation and consistent API design.
+
+Middleware orchestration is a critical architectural component ensuring consistent request processing. The middleware stack processes requests in the following order: HTTP header standardization ensuring CORS headers and security headers, JSON parsing with body size limits, response standardization middleware for format normalization, and finally route handlers. This layered approach ensures consistent HTTP headers across all responses and uniform response formatting regardless of the data structure returned by individual endpoints.
+
+The response standardization middleware implements an intelligent detection mechanism for different response patterns. For standard responses, it wraps the data in a normalized structure. For advanced query responses, it detects and unwraps nested pagination metadata to the response root level while preserving the data array integrity. This dual-mode operation ensures consistency across different query types while maintaining backward compatibility.
+
+\subsection{Data Model and Schema Design}
+
+The User schema defines critical fields for authentication and authorization: username (alphanumeric, 3-30 characters), email (RFC-compliant format), password (hashed, minimum 6 characters with complexity requirements), role (enum: admin, police\_officer, operator), province and district (required string fields identifying geographic jurisdiction). The schema includes pre-save middleware to hash passwords before persistence using bcryptjs, ensuring passwords are never stored in plaintext. Post-retrieval projection automatically excludes password fields from query results, preventing accidental exposure.
+
+The TukTuk schema captures vehicle information including registration number as unique identifier, owner name for vehicle accountability, province and district for geographic organization, and embedded lastKnownLocation with latitude and longitude fields. The schema includes methods for location update operations and supports querying by geographic attributes enabling efficient filtering by jurisdiction.
+
+The LocationHistory schema maintains temporal location records with fields for tuk-tuk reference linking records to specific vehicles, timestamp indicating when the location was recorded, coordinates (latitude, longitude) for geographic data, and optional notes field for annotation. The schema includes indexing on tuk-tuk ID and timestamp fields to optimize temporal range queries for movement tracking, ensuring queries return results efficiently even with large historical datasets.
+
+\subsection{Authentication and Authorization Framework}
+
+JWT (JSON Web Tokens) provides stateless authentication suitable for distributed systems where multiple instances may handle requests without shared session storage. Upon successful login, the server issues a token containing user identity and role information, signed with a secret key known only to the server. Subsequent requests include this token in the Authorization header as a bearer token. The authentication middleware extracts and verifies the token, extracting the user object for downstream use in request handlers.
+
+Role-based access control is implemented through authorization middleware that checks the user's role against endpoint requirements. Administrative endpoints (tuk-tuk registration) require admin role, while standard endpoints allow authenticated users with any role. This design provides flexibility for future role expansion without code modifications. Location-based access control restricts views to geographic areas within user jurisdiction.
+
+\section{Implementation Highlights and Technical Decisions}
+
+\subsection{Query Building and Advanced Filtering}
+
+The queryBuilder utility implements a sophisticated query construction pattern providing secure and flexible data retrieval. The buildFilter function accepts query parameters and an allowedFields array, creating safe MongoDB queries that prevent unauthorized field access and SQL injection-style attacks. The buildSort function parses sort parameters with prefix notation (hyphen for descending, no prefix for ascending) and validates against allowedFields, ensuring users cannot sort by sensitive fields.
+
+The getPagination function enforces constraints on pagination parameters (minimum page 1, maximum 100 records per page) to prevent abuse and database strain. The executeQuery function orchestrates these components, executing MongoDB queries with proper pagination using skip and limit operations. The formatQueryResponse function returns query results with pagination metadata and filter/sort echo, enabling clients to verify their query parameters and understand result context.
+
+\subsection{Error Handling Strategy}
+
+The error handler middleware implements a distinction between expected validation errors (which include details about the specific validation failure) and unexpected server errors (which return generic messages to prevent information disclosure). Mongoose validation errors are caught and transformed into structured error responses with field-level error details. Database connection errors trigger recovery mechanisms to restore connectivity. This approach balances operational transparency with security.
+
+\subsection{Testing and Quality Assurance}
+
+The test suite comprises comprehensive integration tests organized into three test files addressing authentication, tuk-tuk management, and advanced querying. Authentication tests verify registration validation, duplicate user prevention, login token generation, profile retrieval, and token expiration. Tuk-tuk tests validate admin-only registration, geographic filtering, pagination, and location update operations. Advanced querying tests verify pagination metadata accuracy, sort direction enforcement, filter correctness, and combined query operations.
+
+The standardized response middleware is integrated into the test environment, ensuring tests validate the complete request-response cycle including response standardization. Mock authentication is implemented to bypass token verification in tests, enabling direct testing of endpoint logic without authentication overhead.
+
+\subsection{Data Simulation and Seeding}
+
+The system includes comprehensive seed data generation supporting realistic demonstration scenarios. Master data includes all nine provinces and twenty-five districts of Sri Lanka for geographic accuracy. At least twenty police stations are mapped logically to districts enabling operational filtering. The tuk-tuk fleet comprises over two hundred registered vehicles with realistic distribution across provinces.
+
+Location history data generation creates periodic GPS pings simulating continuous vehicle movement over minimum one-week periods before demonstration dates. The simulation includes realistic movement patterns such as repeated routes, rest periods, and geographic consistency, enabling convincing demonstration of querying and filtering capabilities.
+
+\section{Limitations and Future Scalability Considerations}
+
+\subsection{Current System Limitations}
+
+The present implementation uses in-memory session storage without persistence, making stateless deployments a requirement. While JWT-based authentication is stateless, the absence of a token blacklist mechanism means revoked tokens remain valid until expiration. Production deployments would require Redis-based token blacklist implementation for immediate token revocation capability.
+
+Geographic filtering currently operates on exact province and district matches without support for geographic proximity queries or geospatial analysis. Implementing true spatial queries would require MongoDB geospatial indexes and GeoJSON coordinate formats for region definitions.
+
+The absence of rate limiting exposes endpoints to brute-force attacks and denial-of-service threats. Production deployments require rate limiting middleware enforcing request quotas per authenticated user and IP address.
+
+\subsection{Scalability Considerations and Optimization Strategies}
+
+Horizontal scaling is achievable through stateless architecture but requires external session management. Deploying multiple API instances behind a load balancer necessitates shared MongoDB cluster configuration, which the current architecture supports through MongoDB Atlas.
+
+Database query performance optimization requires strategic index creation on frequently filtered fields (province, district, timestamp). Compound indexes for multi-field queries combining geographic and temporal filters would improve performance. Query result caching using Redis could dramatically improve performance for frequently accessed data such as tuk-tuk listings and geographic region data. Cache invalidation strategies must be carefully designed to maintain consistency when underlying data changes.
+
+The location history collection grows continuously and would eventually require archival strategies. Time-series collections or automated deletion of records older than retention periods would manage unbounded growth. Sharding strategies based on geographic regions or vehicle identifiers would distribute data across multiple database nodes.
+
+\subsection{Future Enhancement Recommendations}
+
+Real-time WebSocket connections would enable push notifications of location updates to authorized clients without polling, improving operational responsiveness. Implementing geofencing capabilities would detect when vehicles enter or exit defined geographic regions, triggering alerts for operational anomalies.
+
+Integration with external mapping services could provide route optimization suggestions and traffic-aware recommendations for dispatch operations. Mobile application development would extend platform accessibility beyond administrative interfaces to field personnel with offline-capable clients.
+
+Audit logging of all administrative operations and data access would enhance compliance and security investigation capabilities. Analytics and reporting features could provide insights into traffic patterns, frequent locations, and operational metrics supporting strategic planning.
+
+\section{Conclusion}
+
+This project successfully implements a production-ready Web API for tuk-tuk tracking and movement logging that meets the specified business requirements for Sri Lanka Police operations. The RESTful architecture, security implementation, and advanced querying capabilities provide a solid foundation for law enforcement operational use. While limitations exist in the present implementation, the scalable architecture and modular design facilitate future enhancements addressing current constraints.
+
+The system demonstrates proper software engineering practices including comprehensive testing, error handling, role-based access control, and input validation. The implementation serves as a reference architecture for secure API development in Node.js environments and validates architectural patterns suitable for real-time tracking and location logging systems.
+
+\newpage
+\section*{Appendix: Deployment and Reference Information}
+
+\subsection*{Deployed API URL}
+\begin{verbatim}
+https://tuk-web-api-production.up.railway.app
+\end{verbatim}
+
+\subsection*{API Specification (Swagger/OpenAPI)}
+\begin{verbatim}
+To be deployed at: {API_URL}/api-docs
+(Swagger documentation available upon deployment)
+\end{verbatim}
+
+\subsection*{GitHub Repository URLs}
+\begin{verbatim}
+Main Repository: https://github.com/YOUR_USERNAME/tuk-tuk-api
+(Include student ID and collaborator access for lecturer)
+\end{verbatim}
+
+\subsection*{AI Assistance Tools and Prompts Used}
+\begin{verbatim}
+GitHub Copilot - Code generation, testing assistance, 
+documentation support, debugging suggestions
+
+Claude Haiku 4.5 - Architecture design, API documentation, 
+report generation, technical writing
+
+Prompt examples available in repository documentation
+\end{verbatim}
+
+\subsection*{Database Configuration}
+\begin{verbatim}
+MongoDB Atlas (Cloud-hosted MongoDB service)
+Cluster: Production cluster with replication
+Authentication: IP-whitelisted with strong credentials
+Connection: Automatic reconnection with Mongoose pooling
+\end{verbatim}
+
+\subsection*{Key Technologies and Dependencies}
+\begin{itemize}
+\item Node.js v20.15.0
+\item Express.js v5.2.1
+\item MongoDB v4.4+ (via Mongoose v8.23.0)
+\item JWT Authentication (jsonwebtoken v9.0.3)
+\item Password Hashing (bcryptjs v2.4.3)
+\item Input Validation (joi v17.11.0)
+\item Testing Framework (Jest v30.3.0)
+\item HTTP Client Testing (Supertest v7.2.2)
+\item Environment Management (dotenv v17.4.1)
+\end{itemize}
+
+\subsection*{System Architecture Overview}
+
+The API implements a layered architecture with middleware orchestration. Request flow: HTTP Headers Middleware $\rightarrow$ JSON Parser $\rightarrow$ Response Standardizer $\rightarrow$ Route Handlers $\rightarrow$ Error Handler. Authentication uses stateless JWT tokens. Authorization employs role-based access control. Data validation occurs at schema level using Joi. Database queries use Mongoose ODM with connection pooling and automatic reconnection.
+
+\subsection*{Simulation Data Structure}
+
+Master data includes nine provinces with twenty-five districts, twenty or more police stations, and two hundred or more registered tuk-tuks. Location history comprises minimum one-week of periodic GPS pings with realistic movement patterns, enabling comprehensive querying and filtering demonstrations.
+
+\subsection*{Authentication Sample Request}
+
+\begin{verbatim}
+POST /api/auth/register
+Content-Type: application/json
+Authorization: None required for registration
+
+Request Body:
+{
+  "username": "policeofficer001",
+  "email": "officer@police.lk",
+  "password": "SecurePass123!",
+  "role": "police_officer",
+  "province": "Western",
+  "district": "Colombo"
+}
+
+Response (201 Created):
+{
+  "success": true,
+  "data": {
+    "id": "user_id_uuid",
+    "username": "policeofficer001",
+    "email": "officer@police.lk",
+    "role": "police_officer",
+    "province": "Western",
+    "district": "Colombo"
+  }
+}
+\end{verbatim}
+
+\subsection*{Deployment Platform}
+\begin{verbatim}
+Railway.app - Containerized Node.js deployment 
+with automatic builds from GitHub, environment 
+variable management, and database integration
+\end{verbatim}
+
+\subsection*{Development Setup Instructions}
+
+Clone repository, run \texttt{npm install}, configure \texttt{.env} file with MongoDB connection string and JWT secret, execute \texttt{npm run seed} for data initialization, run \texttt{npm test} to verify functionality, and \texttt{npm run dev} to start development server.
+
+\end{document}

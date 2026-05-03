@@ -1,5 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
 const connectDB = require('./config/db');
 const tukTukRoutes = require('./routes/tukTukRoutes');
 const authRoutes = require('./routes/authRoutes');
@@ -280,6 +282,19 @@ app.get('/', (req, res) => {
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({ message: 'Server is healthy', timestamp: new Date() });
+});
+
+// Swagger API documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { 
+  swaggerOptions: { 
+    url: '/api-docs/swagger.json' 
+  } 
+}));
+
+// Swagger JSON endpoint
+app.get('/api-docs/swagger.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
 });
 
 // API Routes

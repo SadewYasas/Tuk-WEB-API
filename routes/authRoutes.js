@@ -6,7 +6,37 @@ const { authMiddleware } = require('../middleware/auth');
 const validateRequest = require('../middleware/validation');
 const { userRegisterSchema, userLoginSchema } = require('../schemas/authSchemas');
 
-// Register a new user
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - email
+ *               - password
+ *               - province
+ *               - district
+ *             properties:
+ *               username: { type: string }
+ *               email: { type: string, format: email }
+ *               password: { type: string, format: password }
+ *               role: { type: string, enum: [admin, police_officer, driver] }
+ *               province: { type: string }
+ *               district: { type: string }
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *       400:
+ *         description: User already exists
+ */
 router.post('/register', validateRequest(userRegisterSchema), async (req, res) => {
   try {
     const { username, email, password, role, province, district } = req.validatedBody;
@@ -43,6 +73,30 @@ router.post('/register', validateRequest(userRegisterSchema), async (req, res) =
   }
 });
 
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: User login
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email: { type: string, format: email }
+ *               password: { type: string, format: password }
+ *     responses:
+ *       200:
+ *         description: Login successful, returns JWT token
+ *       401:
+ *         description: Invalid credentials
+ */
 // Login user
 router.post('/login', validateRequest(userLoginSchema), async (req, res) => {
   try {

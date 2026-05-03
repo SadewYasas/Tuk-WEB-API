@@ -7,6 +7,41 @@ const { executeQuery, formatQueryResponse } = require('../utils/queryBuilder');
 const validateRequest = require('../middleware/validation');
 const { tukTukRegisterSchema, updateLocationSchema } = require('../schemas/tukTukSchemas');
 
+/**
+ * @swagger
+ * /api/tuk-tuks/register:
+ *   post:
+ *     summary: Register a new tuk-tuk (Admin only)
+ *     tags: [Tuk-Tuks]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - registrationNumber
+ *               - ownerName
+ *               - province
+ *               - district
+ *             properties:
+ *               registrationNumber: { type: string }
+ *               ownerName: { type: string }
+ *               province: { type: string }
+ *               district: { type: string }
+ *               lastKnownLocation:
+ *                 type: object
+ *                 properties:
+ *                   latitude: { type: number }
+ *                   longitude: { type: number }
+ *     responses:
+ *       201:
+ *         description: Tuk-tuk registered successfully
+ *       409:
+ *         description: Tuk-tuk already exists
+ */
 // Route to register a new tuk-tuk (Admin only)
 router.post('/register', authMiddleware, authorize('admin'), validateRequest(tukTukRegisterSchema), async (req, res) => {
   try {
@@ -42,6 +77,37 @@ router.post('/register', authMiddleware, authorize('admin'), validateRequest(tuk
   }
 });
 
+/**
+ * @swagger
+ * /api/tuk-tuks:
+ *   get:
+ *     summary: Get all tuk-tuks with filtering, sorting and pagination
+ *     tags: [Tuk-Tuks]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: filter
+ *         in: query
+ *         description: Filter by field value
+ *         schema: { type: string }
+ *       - name: sort
+ *         in: query
+ *         description: Sort by field
+ *         schema: { type: string }
+ *       - name: page
+ *         in: query
+ *         description: Page number
+ *         schema: { type: integer }
+ *       - name: limit
+ *         in: query
+ *         description: Items per page
+ *         schema: { type: integer }
+ *     responses:
+ *       200:
+ *         description: List of tuk-tuks retrieved successfully
+ *       400:
+ *         description: Query error
+ */
 // Route to get all tuk-tuks with advanced filtering, sorting, and pagination
 router.get('/', authMiddleware, async (req, res) => {
   try {
@@ -70,6 +136,26 @@ router.get('/', authMiddleware, async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/tuk-tuks/{id}:
+ *   get:
+ *     summary: Get a specific tuk-tuk by ID
+ *     tags: [Tuk-Tuks]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: Tuk-tuk ID
+ *         schema: { type: string }
+ *     responses:
+ *       200:
+ *         description: Tuk-tuk retrieved successfully
+ *       404:
+ *         description: Tuk-tuk not found
+ */
 // Route to get a specific tuk-tuk by ID
 router.get('/:id', authMiddleware, async (req, res) => {
   try {
