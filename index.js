@@ -19,19 +19,13 @@ connectDB();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-const swaggerSpec = {
+const swaggerSpecTemplate = {
   openapi: '3.0.0',
   info: {
     title: 'Tuk-Tuk Tracking API',
     version: '1.0.0',
     description: 'Swagger documentation for the Tuk-Tuk Tracking API',
   },
-  servers: [
-    {
-      url: `http://localhost:${PORT}`,
-      description: 'Local development server',
-    },
-  ],
   components: {
     securitySchemes: {
       bearerAuth: {
@@ -41,6 +35,36 @@ const swaggerSpec = {
       },
     },
     schemas: {
+      UserCredentials: {
+        type: 'object',
+        properties: {
+          email: { type: 'string', format: 'email' },
+          password: { type: 'string' },
+        },
+        required: ['email', 'password'],
+      },
+      RegisterUser: {
+        type: 'object',
+        properties: {
+          username: { type: 'string' },
+          email: { type: 'string', format: 'email' },
+          password: { type: 'string' },
+          role: { type: 'string' },
+          province: { type: 'string' },
+          district: { type: 'string' },
+        },
+        required: ['username', 'email', 'password'],
+      },
+      UpdateLocation: {
+        type: 'object',
+        properties: {
+          latitude: { type: 'number' },
+          longitude: { type: 'number' },
+          speed: { type: 'number' },
+          accuracy: { type: 'number' },
+        },
+        required: ['latitude', 'longitude'],
+      },
       ErrorResponse: {
         type: 'object',
         properties: {
@@ -74,27 +98,17 @@ const swaggerSpec = {
           required: true,
           content: {
             'application/json': {
-              schema: {
-                type: 'object',
-                properties: {
-                  username: { type: 'string' },
-                  email: { type: 'string' },
-                  password: { type: 'string' },
-                  role: { type: 'string' },
-                  province: { type: 'string' },
-                  district: { type: 'string' },
-                },
-                required: ['username', 'email', 'password'],
-              },
+              schema: { $ref: '#/components/schemas/RegisterUser' },
             },
           },
         },
         responses: {
           '201': { description: 'User registered successfully' },
-          '400': { description: 'Invalid input' },
+          '400': { description: 'Invalid input', content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorResponse' } } } },
         },
       },
     },
+
     '/api/auth/login': {
       post: {
         summary: 'Authenticate user and return JWT token',
@@ -102,20 +116,13 @@ const swaggerSpec = {
           required: true,
           content: {
             'application/json': {
-              schema: {
-                type: 'object',
-                properties: {
-                  email: { type: 'string' },
-                  password: { type: 'string' },
-                },
-                required: ['email', 'password'],
-              },
+              schema: { $ref: '#/components/schemas/UserCredentials' },
             },
           },
         },
         responses: {
           '200': { description: 'Login successful' },
-          '401': { description: 'Invalid credentials' },
+          '401': { description: 'Invalid credentials', content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorResponse' } } } },
         },
       },
     },
@@ -125,7 +132,7 @@ const swaggerSpec = {
         security: [{ bearerAuth: [] }],
         responses: {
           '200': { description: 'User profile retrieved successfully' },
-          '401': { description: 'Authentication required' },
+          '401': { description: 'Authentication required', content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorResponse' } } } },
         },
       },
     },
@@ -139,7 +146,122 @@ const swaggerSpec = {
         },
       },
     },
+    '/api/tuk-tuks/register': {
+      post: {
+        summary: 'Register a new tuk-tuk',
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  registrationNumber: { type: 'string' },
+                  ownerName: { type: 'string' },
+                  province: { type: 'string' },
+                  district: { type: 'string' },
+                  lastKnownLocation: { type: 'object' },
+                },
+                required: ['registrationNumber', 'ownerName', 'province', 'district', 'lastKnownLocation'],
+              },
+            },
+          },
+        },
+        responses: {
+          '201': { description: 'Tuk-tuk registered successfully' },
+          '400': { description: 'Invalid input' },
+        },
+      },
+    },
+    '/api/tuk-tuks/{id}': {
+      get: {
+        summary: 'Get a specific tuk-tuk by ID',
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: {
+          '200': { description: 'Tuk-tuk retrieved successfully' },
+          '404': { description: 'Not found' },
+        },
+      },
+    },
+    '/api/tuk-tuks/{id}/update-location': {
+      put: {
+        summary: 'Update tuk-tuk location',
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/UpdateLocation' },
+            },
+          },
+        },
+        responses: {
+          '200': { description: 'Location updated successfully' },
+          '404': { description: 'Not found' },
+        },
+      },
+    },
+    '/api/tuk-tuks/{id}/movement-history': {
+      get: {
+        summary: 'Get tuk-tuk movement history',
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: {
+          '200': { description: 'Movement history retrieved successfully' },
+          '404': { description: 'Not found' },
+        },
+      },
+    },
+    '/api/tuk-tuks/{id}/real-time-location': {
+      get: {
+        summary: 'Get real-time tuk-tuk location',
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: {
+          '200': { description: 'Real-time location retrieved successfully' },
+          '404': { description: 'Not found' },
+        },
+      },
+    },
+    '/api/tuk-tuks/filter/province/{province}': {
+      get: {
+        summary: 'List tuk-tuks filtered by province',
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: 'province', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: {
+          '200': { description: 'Tuk-tuks retrieved successfully' },
+          '404': { description: 'Not found' },
+        },
+      },
+    },
+    '/api/tuk-tuks/filter/district/{district}': {
+      get: {
+        summary: 'List tuk-tuks filtered by district',
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: 'district', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: {
+          '200': { description: 'Tuk-tuks retrieved successfully' },
+          '404': { description: 'Not found' },
+        },
+      },
+    },
   },
+};
+
+const getSwaggerSpec = (req) => {
+  const baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get('host')}`;
+  return {
+    ...swaggerSpecTemplate,
+    servers: [
+      {
+        url: baseUrl,
+        description: 'API server',
+      },
+    ],
+  };
 };
 
 // Global middleware stack
@@ -168,7 +290,13 @@ app.use('/api/auth', authRoutes);
 app.use('/api/tuk-tuks', tukTukRoutes);
 
 // Swagger docs endpoint
-app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api/docs', swaggerUi.serve, (req, res, next) => {
+  const swaggerSpec = getSwaggerSpec(req);
+  return swaggerUi.setup(swaggerSpec, { explorer: true })(req, res, next);
+});
+app.get('/api/docs.json', (req, res) => {
+  res.json(getSwaggerSpec(req));
+});
 
 // 404 handler
 app.use((req, res) => {
