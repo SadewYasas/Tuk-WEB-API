@@ -1,83 +1,74 @@
+const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const fs = require('fs');
+const path = require('path');
 const connectDB = require('../config/db');
 const Province = require('../models/Province');
 const District = require('../models/District');
 const Station = require('../models/Station');
 const TukTuk = require('../models/TukTuk');
 const User = require('../models/User');
+const LocationHistory = require('../models/LocationHistory');
 
 // Load environment variables
 dotenv.config();
 
-// Sample data
+// Sri Lanka Master Data
 const provinces = [
-  { name: 'Bangkok', code: 'BKK', region: 'Central' },
-  { name: 'Chiang Mai', code: 'CNX', region: 'Northern' },
-  { name: 'Phuket', code: 'PHK', region: 'Southern' },
-  { name: 'Pattaya', code: 'UTP', region: 'Eastern' },
-  { name: 'Khon Kaen', code: 'KKC', region: 'Northeastern' },
-  { name: 'Chiang Rai', code: 'CEI', region: 'Northern' },
-  { name: 'Rayong', code: 'RYG', region: 'Eastern' },
-  { name: 'Krabi', code: 'KBV', region: 'Southern' },
-  { name: 'Udon Thani', code: 'UTH', region: 'Northeastern' },
+  { name: 'Western', code: 'WP', region: 'West' },
+  { name: 'Central', code: 'CP', region: 'Central' },
+  { name: 'Southern', code: 'SP', region: 'South' },
+  { name: 'Northern', code: 'NP', region: 'North' },
+  { name: 'Eastern', code: 'EP', region: 'East' },
+  { name: 'North Western', code: 'NWP', region: 'North West' },
+  { name: 'North Central', code: 'NCP', region: 'North Central' },
+  { name: 'Uva', code: 'UP', region: 'Uva' },
+  { name: 'Sabaragamuwa', code: 'SG', region: 'Sabaragamuwa' },
 ];
 
 const districtsByProvince = {
-  Bangkok: [
-    'Chatuchak', 'Bangsue', 'Bang Khen', 'Lad Phrao', 'Saphan Sung',
-    'Yan Nawa', 'Bang Khun Thian', 'Min Buri', 'Sai Mai',
-  ],
-  'Chiang Mai': [
-    'Mueang Chiang Mai', 'Suthep', 'San Kamphaeng', 'Hang Dong', 'Doi Saket',
-    'San Sai', 'Chiang Dao', 'Fang',
-  ],
-  Phuket: ['Mueang Phuket', 'Kathu', 'Karon', 'Kamala', 'Thalang', 'Patong'],
-  Pattaya: ['Banglamung', 'Naklua', 'Sattahip'],
-  'Khon Kaen': [
-    'Mueang Khon Kaen', 'Phu Wiang', 'Mancha Khiri', 'Non Sila', 'Ban Phai',
-  ],
-  'Chiang Rai': ['Mueang Chiang Rai', 'Wiangchiang Rai', 'Mae Sai'],
-  Rayong: ['Mueang Rayong', 'Ban Phe', 'Map Ta Phut', 'Wang Chan'],
-  Krabi: ['Mueang Krabi', 'Ao Nang', 'Phi Phi'],
-  'Udon Thani': ['Mueang Udon Thani', 'Phibun Rak', 'Nong Han'],
+  'Western': ['Colombo', 'Gampaha', 'Kalutara'],
+  'Central': ['Kandy', 'Matale', 'Nuwara Eliya'],
+  'Southern': ['Galle', 'Matara', 'Hambantota'],
+  'Northern': ['Jaffna', 'Kilinochchi', 'Mannar', 'Vavuniya', 'Mullaitivu'],
+  'Eastern': ['Trincomalee', 'Batticaloa', 'Ampara'],
+  'North Western': ['Kurunegala', 'Puttalam'],
+  'North Central': ['Anuradhapura', 'Polonnaruwa'],
+  'Uva': ['Badulla', 'Monaragala'],
+  'Sabaragamuwa': ['Ratnapura', 'Kegalle'],
 };
 
-const stations = [
-  // Bangkok stations
-  { name: 'Central Bangkok Station', province: 'Bangkok', district: 'Chatuchak', lat: 13.7563, lng: 100.5018 },
-  { name: 'Chatuchak Station', province: 'Bangkok', district: 'Chatuchak', lat: 13.8009, lng: 100.5543 },
-  { name: 'Bangsue Station', province: 'Bangkok', district: 'Bangsue', lat: 13.8164, lng: 100.5282 },
-  { name: 'Bang Khen Station', province: 'Bangkok', district: 'Bang Khen', lat: 13.8459, lng: 100.5639 },
-  // Chiang Mai stations
-  { name: 'Central Chiang Mai Station', province: 'Chiang Mai', district: 'Mueang Chiang Mai', lat: 18.7883, lng: 98.9853 },
-  { name: 'Suthep Station', province: 'Chiang Mai', district: 'Suthep', lat: 18.8075, lng: 98.9511 },
-  { name: 'San Kamphaeng Station', province: 'Chiang Mai', district: 'San Kamphaeng', lat: 18.8256, lng: 99.0824 },
-  { name: 'Hang Dong Station', province: 'Chiang Mai', district: 'Hang Dong', lat: 18.7219, lng: 98.8934 },
-  // Phuket stations
-  { name: 'Central Phuket Station', province: 'Phuket', district: 'Mueang Phuket', lat: 8.1167, lng: 98.35 },
-  { name: 'Kathu Station', province: 'Phuket', district: 'Kathu', lat: 8.2925, lng: 98.2969 },
-  { name: 'Karon Station', province: 'Phuket', district: 'Karon', lat: 8.0764, lng: 98.3066 },
-  { name: 'Patong Station', province: 'Phuket', district: 'Patong', lat: 8.1572, lng: 98.2945 },
-  // Pattaya stations
-  { name: 'Central Pattaya Station', province: 'Pattaya', district: 'Banglamung', lat: 12.9272, lng: 100.8772 },
-  { name: 'Naklua Station', province: 'Pattaya', district: 'Naklua', lat: 12.9753, lng: 100.8803 },
-  // Khon Kaen stations
-  { name: 'Central Khon Kaen Station', province: 'Khon Kaen', district: 'Mueang Khon Kaen', lat: 16.4406, lng: 102.8362 },
-  { name: 'Phu Wiang Station', province: 'Khon Kaen', district: 'Phu Wiang', lat: 16.5028, lng: 102.0653 },
-  // Chiang Rai stations
-  { name: 'Central Chiang Rai Station', province: 'Chiang Rai', district: 'Mueang Chiang Rai', lat: 19.9108, lng: 99.8392 },
-  // Rayong stations
-  { name: 'Central Rayong Station', province: 'Rayong', district: 'Mueang Rayong', lat: 12.6833, lng: 101.3 },
-  { name: 'Map Ta Phut Station', province: 'Rayong', district: 'Map Ta Phut', lat: 12.6706, lng: 101.5325 },
-  // Krabi stations
-  { name: 'Central Krabi Station', province: 'Krabi', district: 'Mueang Krabi', lat: 8.0863, lng: 98.9063 },
-  { name: 'Ao Nang Station', province: 'Krabi', district: 'Ao Nang', lat: 8.1792, lng: 98.8272 },
-  // Udon Thani stations
-  { name: 'Central Udon Thani Station', province: 'Udon Thani', district: 'Mueang Udon Thani', lat: 17.3867, lng: 102.7858 },
-];
+// Map center points for districts to generate realistic coordinates
+const districtCoordinates = {
+  'Colombo': { lat: 6.9271, lng: 79.8612 },
+  'Gampaha': { lat: 7.0873, lng: 79.9996 },
+  'Kalutara': { lat: 6.5854, lng: 79.9607 },
+  'Kandy': { lat: 7.2906, lng: 80.6337 },
+  'Matale': { lat: 7.4675, lng: 80.6234 },
+  'Nuwara Eliya': { lat: 6.9497, lng: 80.7839 },
+  'Galle': { lat: 6.0328, lng: 80.2168 },
+  'Matara': { lat: 5.9549, lng: 80.5469 },
+  'Hambantota': { lat: 6.1246, lng: 81.1185 },
+  'Jaffna': { lat: 9.6615, lng: 80.0255 },
+  'Kilinochchi': { lat: 9.3803, lng: 80.3770 },
+  'Mannar': { lat: 8.9810, lng: 79.9044 },
+  'Vavuniya': { lat: 8.7542, lng: 80.4982 },
+  'Mullaitivu': { lat: 9.2671, lng: 80.8142 },
+  'Trincomalee': { lat: 8.5874, lng: 81.2152 },
+  'Batticaloa': { lat: 7.7102, lng: 81.6924 },
+  'Ampara': { lat: 7.2840, lng: 81.6724 },
+  'Kurunegala': { lat: 7.4818, lng: 80.3609 },
+  'Puttalam': { lat: 8.0362, lng: 79.8283 },
+  'Anuradhapura': { lat: 8.3114, lng: 80.4037 },
+  'Polonnaruwa': { lat: 7.9403, lng: 81.0188 },
+  'Badulla': { lat: 6.9934, lng: 81.0550 },
+  'Monaragala': { lat: 6.8728, lng: 81.3507 },
+  'Ratnapura': { lat: 6.6828, lng: 80.3992 },
+  'Kegalle': { lat: 7.2513, lng: 80.3464 },
+};
 
 const tukTukNames = [
-  'Speed Dragon', 'Golden Wheel', 'Bangkok Express', 'Quick Rider', 'Lucky Number',
+  'Speed Dragon', 'Golden Wheel', 'Colombo Express', 'Quick Rider', 'Lucky Number',
   'Power Runner', 'City Star', 'Swift Motion', 'Happy Ride', 'Bright Future',
   'Quick Pulse', 'Moon Light', 'Star Express', 'Fire Dragon', 'Cloud Nine',
   'Ocean Wave', 'Desert Wind', 'Thunder Bolt', 'Silver Arrow', 'Golden Ray',
@@ -88,27 +79,62 @@ const generateTukTuks = () => {
   let registrationNum = 1;
 
   for (const province of provinces) {
-    for (let i = 0; i < 22; i++) {
-      const districtsList = districtsByProvince[province.name] || [];
-      const randomDistrict = districtsList[Math.floor(Math.random() * districtsList.length)];
-      const randomName = tukTukNames[Math.floor(Math.random() * tukTukNames.length)];
-
-      tukTuks.push({
-        registrationNumber: `TK-${String(registrationNum).padStart(5, '0')}`,
-        ownerName: `${randomName} Owner ${registrationNum}`,
-        province: province.name,
-        district: randomDistrict || districtsList[0],
-        lastKnownLocation: {
-          latitude: 13.7563 + (Math.random() - 0.5) * 10,
-          longitude: 100.5018 + (Math.random() - 0.5) * 10,
-          timestamp: new Date(),
-        },
-      });
-      registrationNum++;
+    const districtsList = districtsByProvince[province.name] || [];
+    for (const district of districtsList) {
+      // Generate 10 tuk tuks per district (25 * 10 = 250 total)
+      for (let i = 0; i < 10; i++) {
+        const randomName = tukTukNames[Math.floor(Math.random() * tukTukNames.length)];
+        const center = districtCoordinates[district] || { lat: 7.8731, lng: 80.7718 }; // Default SL center
+        
+        tukTuks.push({
+          registrationNumber: `TK-${String(registrationNum).padStart(5, '0')}`,
+          ownerName: `${randomName} Owner ${registrationNum}`,
+          province: province.name,
+          district: district,
+          lastKnownLocation: {
+            latitude: center.lat + (Math.random() - 0.5) * 0.1,
+            longitude: center.lng + (Math.random() - 0.5) * 0.1,
+            timestamp: new Date(),
+          },
+        });
+        registrationNum++;
+      }
     }
   }
-
   return tukTuks;
+};
+
+const generateLocationHistory = (savedTukTuks) => {
+  const historyLogs = [];
+  const now = new Date();
+  
+  for (const tuktuk of savedTukTuks) {
+    const centerLat = tuktuk.lastKnownLocation.latitude;
+    const centerLng = tuktuk.lastKnownLocation.longitude;
+    
+    // Generate logs for past 7 days, 1 ping every 4 hours = 42 pings
+    for (let day = 7; day >= 0; day--) {
+      for (let hour = 0; hour < 24; hour += 4) {
+        const timestamp = new Date(now);
+        timestamp.setDate(timestamp.getDate() - day);
+        timestamp.setHours(hour, 0, 0, 0);
+        
+        // Slight randomization from the center
+        const latOffset = (Math.random() - 0.5) * 0.05;
+        const lngOffset = (Math.random() - 0.5) * 0.05;
+        
+        historyLogs.push({
+          tukTukId: tuktuk._id,
+          latitude: centerLat + latOffset,
+          longitude: centerLng + lngOffset,
+          timestamp: timestamp,
+          speed: Math.floor(Math.random() * 40) + 10, // 10-50 km/h
+          accuracy: Math.floor(Math.random() * 10) + 1,
+        });
+      }
+    }
+  }
+  return historyLogs;
 };
 
 const seedDatabase = async () => {
@@ -121,6 +147,8 @@ const seedDatabase = async () => {
     await District.deleteMany({});
     await Station.deleteMany({});
     await TukTuk.deleteMany({});
+    await LocationHistory.deleteMany({});
+    await User.deleteMany({});
     console.log('Cleared existing data');
 
     // Seed provinces
@@ -143,35 +171,20 @@ const seedDatabase = async () => {
     const savedDistricts = await District.insertMany(districts);
     console.log(`✓ Seeded ${savedDistricts.length} districts`);
 
-    // Seed stations
-    let stationCodeCounter = 1;
-    const stationsToSeed = stations.map((station) => {
-      const province = savedProvinces.find((p) => p.name === station.province);
-      if (!province) {
-        console.warn(`Province not found for station: ${station.name}`);
-        return null;
-      }
-
-      const district = savedDistricts.find(
-        (d) => d.provinceName === station.province && d.name === station.district
-      );
-      if (!district) {
-        console.warn(`District not found for station: ${station.name} in province: ${station.province}`);
-        return null;
-      }
-
+    // Seed stations (1 per district)
+    const stationsToSeed = savedDistricts.map((district, index) => {
+      const center = districtCoordinates[district.name] || { lat: 7.8731, lng: 80.7718 };
       return {
-        name: station.name,
-        code: `ST-${String(stationCodeCounter++).padStart(3, '0')}`,
-        province: province._id,
+        name: `${district.name} Main Police Station`,
+        code: `ST-${String(index + 1).padStart(3, '0')}`,
+        province: district.province,
         district: district._id,
-        provinceName: province.name,
+        provinceName: district.provinceName,
         districtName: district.name,
-        latitude: station.lat,
-        longitude: station.lng,
+        latitude: center.lat,
+        longitude: center.lng,
       };
-    }).filter(s => s !== null);
-
+    });
     const savedStations = await Station.insertMany(stationsToSeed);
     console.log(`✓ Seeded ${savedStations.length} stations`);
 
@@ -180,6 +193,12 @@ const seedDatabase = async () => {
     const savedTukTuks = await TukTuk.insertMany(tukTuks);
     console.log(`✓ Seeded ${savedTukTuks.length} tuk-tuks`);
 
+    // Seed location history
+    console.log('Generating location history (this may take a few seconds)...');
+    const historyLogs = generateLocationHistory(savedTukTuks);
+    const savedHistory = await LocationHistory.insertMany(historyLogs);
+    console.log(`✓ Seeded ${savedHistory.length} location history records (7 days per TukTuk)`);
+
     // Seed admin user
     const adminUser = new User({
       username: 'admin',
@@ -187,7 +206,7 @@ const seedDatabase = async () => {
       password: 'Admin@123',
       role: 'admin',
       province: provinces[0].name,
-      district: districtsByProvince['Bangkok'][0],
+      district: districtsByProvince['Western'][0],
     });
     await adminUser.save();
     console.log('✓ Seeded admin user (email: admin@tuktuking.com, password: Admin@123)');
@@ -208,8 +227,28 @@ const seedDatabase = async () => {
     }
     console.log(`✓ Seeded ${provinces.length} test operator users`);
 
+    // Export simulation data to JSON
+    const exportData = {
+      summary: {
+        provincesCount: savedProvinces.length,
+        districtsCount: savedDistricts.length,
+        stationsCount: savedStations.length,
+        tukTuksCount: savedTukTuks.length,
+        locationLogsCount: savedHistory.length,
+      },
+      provinces: savedProvinces.map(p => ({ name: p.name, code: p.code })),
+      districts: savedDistricts.map(d => ({ name: d.name, province: d.provinceName })),
+      stations: savedStations.map(s => ({ name: s.name, district: s.districtName })),
+      tukTuks: savedTukTuks.map(t => ({ registration: t.registrationNumber, province: t.province, district: t.district })),
+      sampleLocationLogs: savedHistory.slice(0, 10) // Only export a sample of logs to keep file size small
+    };
+    
+    const outputPath = path.join(__dirname, '..', 'simulation_data.json');
+    fs.writeFileSync(outputPath, JSON.stringify(exportData, null, 2));
+    console.log(`✓ Exported simulation data summary to ${outputPath}`);
+
     console.log('\n✅ Database seeding completed successfully!');
-    console.log(`Total: 9 provinces, 25 districts, 20+ stations, 198+ tuk-tuks`);
+    console.log(`Total: ${savedProvinces.length} provinces, ${savedDistricts.length} districts, ${savedStations.length} stations, ${savedTukTuks.length} tuk-tuks, ${savedHistory.length} location pings.`);
     process.exit(0);
   } catch (error) {
     console.error('Error seeding database:', error.message);

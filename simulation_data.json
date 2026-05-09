@@ -1,0 +1,1605 @@
+{
+  "summary": {
+    "provincesCount": 9,
+    "districtsCount": 25,
+    "stationsCount": 25,
+    "tukTuksCount": 250,
+    "locationLogsCount": 12000
+  },
+  "provinces": [
+    {
+      "name": "Western",
+      "code": "WP"
+    },
+    {
+      "name": "Central",
+      "code": "CP"
+    },
+    {
+      "name": "Southern",
+      "code": "SP"
+    },
+    {
+      "name": "Northern",
+      "code": "NP"
+    },
+    {
+      "name": "Eastern",
+      "code": "EP"
+    },
+    {
+      "name": "North Western",
+      "code": "NWP"
+    },
+    {
+      "name": "North Central",
+      "code": "NCP"
+    },
+    {
+      "name": "Uva",
+      "code": "UP"
+    },
+    {
+      "name": "Sabaragamuwa",
+      "code": "SG"
+    }
+  ],
+  "districts": [
+    {
+      "name": "Colombo",
+      "province": "Western"
+    },
+    {
+      "name": "Gampaha",
+      "province": "Western"
+    },
+    {
+      "name": "Kalutara",
+      "province": "Western"
+    },
+    {
+      "name": "Kandy",
+      "province": "Central"
+    },
+    {
+      "name": "Matale",
+      "province": "Central"
+    },
+    {
+      "name": "Nuwara Eliya",
+      "province": "Central"
+    },
+    {
+      "name": "Galle",
+      "province": "Southern"
+    },
+    {
+      "name": "Matara",
+      "province": "Southern"
+    },
+    {
+      "name": "Hambantota",
+      "province": "Southern"
+    },
+    {
+      "name": "Jaffna",
+      "province": "Northern"
+    },
+    {
+      "name": "Kilinochchi",
+      "province": "Northern"
+    },
+    {
+      "name": "Mannar",
+      "province": "Northern"
+    },
+    {
+      "name": "Vavuniya",
+      "province": "Northern"
+    },
+    {
+      "name": "Mullaitivu",
+      "province": "Northern"
+    },
+    {
+      "name": "Trincomalee",
+      "province": "Eastern"
+    },
+    {
+      "name": "Batticaloa",
+      "province": "Eastern"
+    },
+    {
+      "name": "Ampara",
+      "province": "Eastern"
+    },
+    {
+      "name": "Kurunegala",
+      "province": "North Western"
+    },
+    {
+      "name": "Puttalam",
+      "province": "North Western"
+    },
+    {
+      "name": "Anuradhapura",
+      "province": "North Central"
+    },
+    {
+      "name": "Polonnaruwa",
+      "province": "North Central"
+    },
+    {
+      "name": "Badulla",
+      "province": "Uva"
+    },
+    {
+      "name": "Monaragala",
+      "province": "Uva"
+    },
+    {
+      "name": "Ratnapura",
+      "province": "Sabaragamuwa"
+    },
+    {
+      "name": "Kegalle",
+      "province": "Sabaragamuwa"
+    }
+  ],
+  "stations": [
+    {
+      "name": "Colombo Main Police Station",
+      "district": "Colombo"
+    },
+    {
+      "name": "Gampaha Main Police Station",
+      "district": "Gampaha"
+    },
+    {
+      "name": "Kalutara Main Police Station",
+      "district": "Kalutara"
+    },
+    {
+      "name": "Kandy Main Police Station",
+      "district": "Kandy"
+    },
+    {
+      "name": "Matale Main Police Station",
+      "district": "Matale"
+    },
+    {
+      "name": "Nuwara Eliya Main Police Station",
+      "district": "Nuwara Eliya"
+    },
+    {
+      "name": "Galle Main Police Station",
+      "district": "Galle"
+    },
+    {
+      "name": "Matara Main Police Station",
+      "district": "Matara"
+    },
+    {
+      "name": "Hambantota Main Police Station",
+      "district": "Hambantota"
+    },
+    {
+      "name": "Jaffna Main Police Station",
+      "district": "Jaffna"
+    },
+    {
+      "name": "Kilinochchi Main Police Station",
+      "district": "Kilinochchi"
+    },
+    {
+      "name": "Mannar Main Police Station",
+      "district": "Mannar"
+    },
+    {
+      "name": "Vavuniya Main Police Station",
+      "district": "Vavuniya"
+    },
+    {
+      "name": "Mullaitivu Main Police Station",
+      "district": "Mullaitivu"
+    },
+    {
+      "name": "Trincomalee Main Police Station",
+      "district": "Trincomalee"
+    },
+    {
+      "name": "Batticaloa Main Police Station",
+      "district": "Batticaloa"
+    },
+    {
+      "name": "Ampara Main Police Station",
+      "district": "Ampara"
+    },
+    {
+      "name": "Kurunegala Main Police Station",
+      "district": "Kurunegala"
+    },
+    {
+      "name": "Puttalam Main Police Station",
+      "district": "Puttalam"
+    },
+    {
+      "name": "Anuradhapura Main Police Station",
+      "district": "Anuradhapura"
+    },
+    {
+      "name": "Polonnaruwa Main Police Station",
+      "district": "Polonnaruwa"
+    },
+    {
+      "name": "Badulla Main Police Station",
+      "district": "Badulla"
+    },
+    {
+      "name": "Monaragala Main Police Station",
+      "district": "Monaragala"
+    },
+    {
+      "name": "Ratnapura Main Police Station",
+      "district": "Ratnapura"
+    },
+    {
+      "name": "Kegalle Main Police Station",
+      "district": "Kegalle"
+    }
+  ],
+  "tukTuks": [
+    {
+      "registration": "TK-00001",
+      "province": "Western",
+      "district": "Colombo"
+    },
+    {
+      "registration": "TK-00002",
+      "province": "Western",
+      "district": "Colombo"
+    },
+    {
+      "registration": "TK-00003",
+      "province": "Western",
+      "district": "Colombo"
+    },
+    {
+      "registration": "TK-00004",
+      "province": "Western",
+      "district": "Colombo"
+    },
+    {
+      "registration": "TK-00005",
+      "province": "Western",
+      "district": "Colombo"
+    },
+    {
+      "registration": "TK-00006",
+      "province": "Western",
+      "district": "Colombo"
+    },
+    {
+      "registration": "TK-00007",
+      "province": "Western",
+      "district": "Colombo"
+    },
+    {
+      "registration": "TK-00008",
+      "province": "Western",
+      "district": "Colombo"
+    },
+    {
+      "registration": "TK-00009",
+      "province": "Western",
+      "district": "Colombo"
+    },
+    {
+      "registration": "TK-00010",
+      "province": "Western",
+      "district": "Colombo"
+    },
+    {
+      "registration": "TK-00011",
+      "province": "Western",
+      "district": "Gampaha"
+    },
+    {
+      "registration": "TK-00012",
+      "province": "Western",
+      "district": "Gampaha"
+    },
+    {
+      "registration": "TK-00013",
+      "province": "Western",
+      "district": "Gampaha"
+    },
+    {
+      "registration": "TK-00014",
+      "province": "Western",
+      "district": "Gampaha"
+    },
+    {
+      "registration": "TK-00015",
+      "province": "Western",
+      "district": "Gampaha"
+    },
+    {
+      "registration": "TK-00016",
+      "province": "Western",
+      "district": "Gampaha"
+    },
+    {
+      "registration": "TK-00017",
+      "province": "Western",
+      "district": "Gampaha"
+    },
+    {
+      "registration": "TK-00018",
+      "province": "Western",
+      "district": "Gampaha"
+    },
+    {
+      "registration": "TK-00019",
+      "province": "Western",
+      "district": "Gampaha"
+    },
+    {
+      "registration": "TK-00020",
+      "province": "Western",
+      "district": "Gampaha"
+    },
+    {
+      "registration": "TK-00021",
+      "province": "Western",
+      "district": "Kalutara"
+    },
+    {
+      "registration": "TK-00022",
+      "province": "Western",
+      "district": "Kalutara"
+    },
+    {
+      "registration": "TK-00023",
+      "province": "Western",
+      "district": "Kalutara"
+    },
+    {
+      "registration": "TK-00024",
+      "province": "Western",
+      "district": "Kalutara"
+    },
+    {
+      "registration": "TK-00025",
+      "province": "Western",
+      "district": "Kalutara"
+    },
+    {
+      "registration": "TK-00026",
+      "province": "Western",
+      "district": "Kalutara"
+    },
+    {
+      "registration": "TK-00027",
+      "province": "Western",
+      "district": "Kalutara"
+    },
+    {
+      "registration": "TK-00028",
+      "province": "Western",
+      "district": "Kalutara"
+    },
+    {
+      "registration": "TK-00029",
+      "province": "Western",
+      "district": "Kalutara"
+    },
+    {
+      "registration": "TK-00030",
+      "province": "Western",
+      "district": "Kalutara"
+    },
+    {
+      "registration": "TK-00031",
+      "province": "Central",
+      "district": "Kandy"
+    },
+    {
+      "registration": "TK-00032",
+      "province": "Central",
+      "district": "Kandy"
+    },
+    {
+      "registration": "TK-00033",
+      "province": "Central",
+      "district": "Kandy"
+    },
+    {
+      "registration": "TK-00034",
+      "province": "Central",
+      "district": "Kandy"
+    },
+    {
+      "registration": "TK-00035",
+      "province": "Central",
+      "district": "Kandy"
+    },
+    {
+      "registration": "TK-00036",
+      "province": "Central",
+      "district": "Kandy"
+    },
+    {
+      "registration": "TK-00037",
+      "province": "Central",
+      "district": "Kandy"
+    },
+    {
+      "registration": "TK-00038",
+      "province": "Central",
+      "district": "Kandy"
+    },
+    {
+      "registration": "TK-00039",
+      "province": "Central",
+      "district": "Kandy"
+    },
+    {
+      "registration": "TK-00040",
+      "province": "Central",
+      "district": "Kandy"
+    },
+    {
+      "registration": "TK-00041",
+      "province": "Central",
+      "district": "Matale"
+    },
+    {
+      "registration": "TK-00042",
+      "province": "Central",
+      "district": "Matale"
+    },
+    {
+      "registration": "TK-00043",
+      "province": "Central",
+      "district": "Matale"
+    },
+    {
+      "registration": "TK-00044",
+      "province": "Central",
+      "district": "Matale"
+    },
+    {
+      "registration": "TK-00045",
+      "province": "Central",
+      "district": "Matale"
+    },
+    {
+      "registration": "TK-00046",
+      "province": "Central",
+      "district": "Matale"
+    },
+    {
+      "registration": "TK-00047",
+      "province": "Central",
+      "district": "Matale"
+    },
+    {
+      "registration": "TK-00048",
+      "province": "Central",
+      "district": "Matale"
+    },
+    {
+      "registration": "TK-00049",
+      "province": "Central",
+      "district": "Matale"
+    },
+    {
+      "registration": "TK-00050",
+      "province": "Central",
+      "district": "Matale"
+    },
+    {
+      "registration": "TK-00051",
+      "province": "Central",
+      "district": "Nuwara Eliya"
+    },
+    {
+      "registration": "TK-00052",
+      "province": "Central",
+      "district": "Nuwara Eliya"
+    },
+    {
+      "registration": "TK-00053",
+      "province": "Central",
+      "district": "Nuwara Eliya"
+    },
+    {
+      "registration": "TK-00054",
+      "province": "Central",
+      "district": "Nuwara Eliya"
+    },
+    {
+      "registration": "TK-00055",
+      "province": "Central",
+      "district": "Nuwara Eliya"
+    },
+    {
+      "registration": "TK-00056",
+      "province": "Central",
+      "district": "Nuwara Eliya"
+    },
+    {
+      "registration": "TK-00057",
+      "province": "Central",
+      "district": "Nuwara Eliya"
+    },
+    {
+      "registration": "TK-00058",
+      "province": "Central",
+      "district": "Nuwara Eliya"
+    },
+    {
+      "registration": "TK-00059",
+      "province": "Central",
+      "district": "Nuwara Eliya"
+    },
+    {
+      "registration": "TK-00060",
+      "province": "Central",
+      "district": "Nuwara Eliya"
+    },
+    {
+      "registration": "TK-00061",
+      "province": "Southern",
+      "district": "Galle"
+    },
+    {
+      "registration": "TK-00062",
+      "province": "Southern",
+      "district": "Galle"
+    },
+    {
+      "registration": "TK-00063",
+      "province": "Southern",
+      "district": "Galle"
+    },
+    {
+      "registration": "TK-00064",
+      "province": "Southern",
+      "district": "Galle"
+    },
+    {
+      "registration": "TK-00065",
+      "province": "Southern",
+      "district": "Galle"
+    },
+    {
+      "registration": "TK-00066",
+      "province": "Southern",
+      "district": "Galle"
+    },
+    {
+      "registration": "TK-00067",
+      "province": "Southern",
+      "district": "Galle"
+    },
+    {
+      "registration": "TK-00068",
+      "province": "Southern",
+      "district": "Galle"
+    },
+    {
+      "registration": "TK-00069",
+      "province": "Southern",
+      "district": "Galle"
+    },
+    {
+      "registration": "TK-00070",
+      "province": "Southern",
+      "district": "Galle"
+    },
+    {
+      "registration": "TK-00071",
+      "province": "Southern",
+      "district": "Matara"
+    },
+    {
+      "registration": "TK-00072",
+      "province": "Southern",
+      "district": "Matara"
+    },
+    {
+      "registration": "TK-00073",
+      "province": "Southern",
+      "district": "Matara"
+    },
+    {
+      "registration": "TK-00074",
+      "province": "Southern",
+      "district": "Matara"
+    },
+    {
+      "registration": "TK-00075",
+      "province": "Southern",
+      "district": "Matara"
+    },
+    {
+      "registration": "TK-00076",
+      "province": "Southern",
+      "district": "Matara"
+    },
+    {
+      "registration": "TK-00077",
+      "province": "Southern",
+      "district": "Matara"
+    },
+    {
+      "registration": "TK-00078",
+      "province": "Southern",
+      "district": "Matara"
+    },
+    {
+      "registration": "TK-00079",
+      "province": "Southern",
+      "district": "Matara"
+    },
+    {
+      "registration": "TK-00080",
+      "province": "Southern",
+      "district": "Matara"
+    },
+    {
+      "registration": "TK-00081",
+      "province": "Southern",
+      "district": "Hambantota"
+    },
+    {
+      "registration": "TK-00082",
+      "province": "Southern",
+      "district": "Hambantota"
+    },
+    {
+      "registration": "TK-00083",
+      "province": "Southern",
+      "district": "Hambantota"
+    },
+    {
+      "registration": "TK-00084",
+      "province": "Southern",
+      "district": "Hambantota"
+    },
+    {
+      "registration": "TK-00085",
+      "province": "Southern",
+      "district": "Hambantota"
+    },
+    {
+      "registration": "TK-00086",
+      "province": "Southern",
+      "district": "Hambantota"
+    },
+    {
+      "registration": "TK-00087",
+      "province": "Southern",
+      "district": "Hambantota"
+    },
+    {
+      "registration": "TK-00088",
+      "province": "Southern",
+      "district": "Hambantota"
+    },
+    {
+      "registration": "TK-00089",
+      "province": "Southern",
+      "district": "Hambantota"
+    },
+    {
+      "registration": "TK-00090",
+      "province": "Southern",
+      "district": "Hambantota"
+    },
+    {
+      "registration": "TK-00091",
+      "province": "Northern",
+      "district": "Jaffna"
+    },
+    {
+      "registration": "TK-00092",
+      "province": "Northern",
+      "district": "Jaffna"
+    },
+    {
+      "registration": "TK-00093",
+      "province": "Northern",
+      "district": "Jaffna"
+    },
+    {
+      "registration": "TK-00094",
+      "province": "Northern",
+      "district": "Jaffna"
+    },
+    {
+      "registration": "TK-00095",
+      "province": "Northern",
+      "district": "Jaffna"
+    },
+    {
+      "registration": "TK-00096",
+      "province": "Northern",
+      "district": "Jaffna"
+    },
+    {
+      "registration": "TK-00097",
+      "province": "Northern",
+      "district": "Jaffna"
+    },
+    {
+      "registration": "TK-00098",
+      "province": "Northern",
+      "district": "Jaffna"
+    },
+    {
+      "registration": "TK-00099",
+      "province": "Northern",
+      "district": "Jaffna"
+    },
+    {
+      "registration": "TK-00100",
+      "province": "Northern",
+      "district": "Jaffna"
+    },
+    {
+      "registration": "TK-00101",
+      "province": "Northern",
+      "district": "Kilinochchi"
+    },
+    {
+      "registration": "TK-00102",
+      "province": "Northern",
+      "district": "Kilinochchi"
+    },
+    {
+      "registration": "TK-00103",
+      "province": "Northern",
+      "district": "Kilinochchi"
+    },
+    {
+      "registration": "TK-00104",
+      "province": "Northern",
+      "district": "Kilinochchi"
+    },
+    {
+      "registration": "TK-00105",
+      "province": "Northern",
+      "district": "Kilinochchi"
+    },
+    {
+      "registration": "TK-00106",
+      "province": "Northern",
+      "district": "Kilinochchi"
+    },
+    {
+      "registration": "TK-00107",
+      "province": "Northern",
+      "district": "Kilinochchi"
+    },
+    {
+      "registration": "TK-00108",
+      "province": "Northern",
+      "district": "Kilinochchi"
+    },
+    {
+      "registration": "TK-00109",
+      "province": "Northern",
+      "district": "Kilinochchi"
+    },
+    {
+      "registration": "TK-00110",
+      "province": "Northern",
+      "district": "Kilinochchi"
+    },
+    {
+      "registration": "TK-00111",
+      "province": "Northern",
+      "district": "Mannar"
+    },
+    {
+      "registration": "TK-00112",
+      "province": "Northern",
+      "district": "Mannar"
+    },
+    {
+      "registration": "TK-00113",
+      "province": "Northern",
+      "district": "Mannar"
+    },
+    {
+      "registration": "TK-00114",
+      "province": "Northern",
+      "district": "Mannar"
+    },
+    {
+      "registration": "TK-00115",
+      "province": "Northern",
+      "district": "Mannar"
+    },
+    {
+      "registration": "TK-00116",
+      "province": "Northern",
+      "district": "Mannar"
+    },
+    {
+      "registration": "TK-00117",
+      "province": "Northern",
+      "district": "Mannar"
+    },
+    {
+      "registration": "TK-00118",
+      "province": "Northern",
+      "district": "Mannar"
+    },
+    {
+      "registration": "TK-00119",
+      "province": "Northern",
+      "district": "Mannar"
+    },
+    {
+      "registration": "TK-00120",
+      "province": "Northern",
+      "district": "Mannar"
+    },
+    {
+      "registration": "TK-00121",
+      "province": "Northern",
+      "district": "Vavuniya"
+    },
+    {
+      "registration": "TK-00122",
+      "province": "Northern",
+      "district": "Vavuniya"
+    },
+    {
+      "registration": "TK-00123",
+      "province": "Northern",
+      "district": "Vavuniya"
+    },
+    {
+      "registration": "TK-00124",
+      "province": "Northern",
+      "district": "Vavuniya"
+    },
+    {
+      "registration": "TK-00125",
+      "province": "Northern",
+      "district": "Vavuniya"
+    },
+    {
+      "registration": "TK-00126",
+      "province": "Northern",
+      "district": "Vavuniya"
+    },
+    {
+      "registration": "TK-00127",
+      "province": "Northern",
+      "district": "Vavuniya"
+    },
+    {
+      "registration": "TK-00128",
+      "province": "Northern",
+      "district": "Vavuniya"
+    },
+    {
+      "registration": "TK-00129",
+      "province": "Northern",
+      "district": "Vavuniya"
+    },
+    {
+      "registration": "TK-00130",
+      "province": "Northern",
+      "district": "Vavuniya"
+    },
+    {
+      "registration": "TK-00131",
+      "province": "Northern",
+      "district": "Mullaitivu"
+    },
+    {
+      "registration": "TK-00132",
+      "province": "Northern",
+      "district": "Mullaitivu"
+    },
+    {
+      "registration": "TK-00133",
+      "province": "Northern",
+      "district": "Mullaitivu"
+    },
+    {
+      "registration": "TK-00134",
+      "province": "Northern",
+      "district": "Mullaitivu"
+    },
+    {
+      "registration": "TK-00135",
+      "province": "Northern",
+      "district": "Mullaitivu"
+    },
+    {
+      "registration": "TK-00136",
+      "province": "Northern",
+      "district": "Mullaitivu"
+    },
+    {
+      "registration": "TK-00137",
+      "province": "Northern",
+      "district": "Mullaitivu"
+    },
+    {
+      "registration": "TK-00138",
+      "province": "Northern",
+      "district": "Mullaitivu"
+    },
+    {
+      "registration": "TK-00139",
+      "province": "Northern",
+      "district": "Mullaitivu"
+    },
+    {
+      "registration": "TK-00140",
+      "province": "Northern",
+      "district": "Mullaitivu"
+    },
+    {
+      "registration": "TK-00141",
+      "province": "Eastern",
+      "district": "Trincomalee"
+    },
+    {
+      "registration": "TK-00142",
+      "province": "Eastern",
+      "district": "Trincomalee"
+    },
+    {
+      "registration": "TK-00143",
+      "province": "Eastern",
+      "district": "Trincomalee"
+    },
+    {
+      "registration": "TK-00144",
+      "province": "Eastern",
+      "district": "Trincomalee"
+    },
+    {
+      "registration": "TK-00145",
+      "province": "Eastern",
+      "district": "Trincomalee"
+    },
+    {
+      "registration": "TK-00146",
+      "province": "Eastern",
+      "district": "Trincomalee"
+    },
+    {
+      "registration": "TK-00147",
+      "province": "Eastern",
+      "district": "Trincomalee"
+    },
+    {
+      "registration": "TK-00148",
+      "province": "Eastern",
+      "district": "Trincomalee"
+    },
+    {
+      "registration": "TK-00149",
+      "province": "Eastern",
+      "district": "Trincomalee"
+    },
+    {
+      "registration": "TK-00150",
+      "province": "Eastern",
+      "district": "Trincomalee"
+    },
+    {
+      "registration": "TK-00151",
+      "province": "Eastern",
+      "district": "Batticaloa"
+    },
+    {
+      "registration": "TK-00152",
+      "province": "Eastern",
+      "district": "Batticaloa"
+    },
+    {
+      "registration": "TK-00153",
+      "province": "Eastern",
+      "district": "Batticaloa"
+    },
+    {
+      "registration": "TK-00154",
+      "province": "Eastern",
+      "district": "Batticaloa"
+    },
+    {
+      "registration": "TK-00155",
+      "province": "Eastern",
+      "district": "Batticaloa"
+    },
+    {
+      "registration": "TK-00156",
+      "province": "Eastern",
+      "district": "Batticaloa"
+    },
+    {
+      "registration": "TK-00157",
+      "province": "Eastern",
+      "district": "Batticaloa"
+    },
+    {
+      "registration": "TK-00158",
+      "province": "Eastern",
+      "district": "Batticaloa"
+    },
+    {
+      "registration": "TK-00159",
+      "province": "Eastern",
+      "district": "Batticaloa"
+    },
+    {
+      "registration": "TK-00160",
+      "province": "Eastern",
+      "district": "Batticaloa"
+    },
+    {
+      "registration": "TK-00161",
+      "province": "Eastern",
+      "district": "Ampara"
+    },
+    {
+      "registration": "TK-00162",
+      "province": "Eastern",
+      "district": "Ampara"
+    },
+    {
+      "registration": "TK-00163",
+      "province": "Eastern",
+      "district": "Ampara"
+    },
+    {
+      "registration": "TK-00164",
+      "province": "Eastern",
+      "district": "Ampara"
+    },
+    {
+      "registration": "TK-00165",
+      "province": "Eastern",
+      "district": "Ampara"
+    },
+    {
+      "registration": "TK-00166",
+      "province": "Eastern",
+      "district": "Ampara"
+    },
+    {
+      "registration": "TK-00167",
+      "province": "Eastern",
+      "district": "Ampara"
+    },
+    {
+      "registration": "TK-00168",
+      "province": "Eastern",
+      "district": "Ampara"
+    },
+    {
+      "registration": "TK-00169",
+      "province": "Eastern",
+      "district": "Ampara"
+    },
+    {
+      "registration": "TK-00170",
+      "province": "Eastern",
+      "district": "Ampara"
+    },
+    {
+      "registration": "TK-00171",
+      "province": "North Western",
+      "district": "Kurunegala"
+    },
+    {
+      "registration": "TK-00172",
+      "province": "North Western",
+      "district": "Kurunegala"
+    },
+    {
+      "registration": "TK-00173",
+      "province": "North Western",
+      "district": "Kurunegala"
+    },
+    {
+      "registration": "TK-00174",
+      "province": "North Western",
+      "district": "Kurunegala"
+    },
+    {
+      "registration": "TK-00175",
+      "province": "North Western",
+      "district": "Kurunegala"
+    },
+    {
+      "registration": "TK-00176",
+      "province": "North Western",
+      "district": "Kurunegala"
+    },
+    {
+      "registration": "TK-00177",
+      "province": "North Western",
+      "district": "Kurunegala"
+    },
+    {
+      "registration": "TK-00178",
+      "province": "North Western",
+      "district": "Kurunegala"
+    },
+    {
+      "registration": "TK-00179",
+      "province": "North Western",
+      "district": "Kurunegala"
+    },
+    {
+      "registration": "TK-00180",
+      "province": "North Western",
+      "district": "Kurunegala"
+    },
+    {
+      "registration": "TK-00181",
+      "province": "North Western",
+      "district": "Puttalam"
+    },
+    {
+      "registration": "TK-00182",
+      "province": "North Western",
+      "district": "Puttalam"
+    },
+    {
+      "registration": "TK-00183",
+      "province": "North Western",
+      "district": "Puttalam"
+    },
+    {
+      "registration": "TK-00184",
+      "province": "North Western",
+      "district": "Puttalam"
+    },
+    {
+      "registration": "TK-00185",
+      "province": "North Western",
+      "district": "Puttalam"
+    },
+    {
+      "registration": "TK-00186",
+      "province": "North Western",
+      "district": "Puttalam"
+    },
+    {
+      "registration": "TK-00187",
+      "province": "North Western",
+      "district": "Puttalam"
+    },
+    {
+      "registration": "TK-00188",
+      "province": "North Western",
+      "district": "Puttalam"
+    },
+    {
+      "registration": "TK-00189",
+      "province": "North Western",
+      "district": "Puttalam"
+    },
+    {
+      "registration": "TK-00190",
+      "province": "North Western",
+      "district": "Puttalam"
+    },
+    {
+      "registration": "TK-00191",
+      "province": "North Central",
+      "district": "Anuradhapura"
+    },
+    {
+      "registration": "TK-00192",
+      "province": "North Central",
+      "district": "Anuradhapura"
+    },
+    {
+      "registration": "TK-00193",
+      "province": "North Central",
+      "district": "Anuradhapura"
+    },
+    {
+      "registration": "TK-00194",
+      "province": "North Central",
+      "district": "Anuradhapura"
+    },
+    {
+      "registration": "TK-00195",
+      "province": "North Central",
+      "district": "Anuradhapura"
+    },
+    {
+      "registration": "TK-00196",
+      "province": "North Central",
+      "district": "Anuradhapura"
+    },
+    {
+      "registration": "TK-00197",
+      "province": "North Central",
+      "district": "Anuradhapura"
+    },
+    {
+      "registration": "TK-00198",
+      "province": "North Central",
+      "district": "Anuradhapura"
+    },
+    {
+      "registration": "TK-00199",
+      "province": "North Central",
+      "district": "Anuradhapura"
+    },
+    {
+      "registration": "TK-00200",
+      "province": "North Central",
+      "district": "Anuradhapura"
+    },
+    {
+      "registration": "TK-00201",
+      "province": "North Central",
+      "district": "Polonnaruwa"
+    },
+    {
+      "registration": "TK-00202",
+      "province": "North Central",
+      "district": "Polonnaruwa"
+    },
+    {
+      "registration": "TK-00203",
+      "province": "North Central",
+      "district": "Polonnaruwa"
+    },
+    {
+      "registration": "TK-00204",
+      "province": "North Central",
+      "district": "Polonnaruwa"
+    },
+    {
+      "registration": "TK-00205",
+      "province": "North Central",
+      "district": "Polonnaruwa"
+    },
+    {
+      "registration": "TK-00206",
+      "province": "North Central",
+      "district": "Polonnaruwa"
+    },
+    {
+      "registration": "TK-00207",
+      "province": "North Central",
+      "district": "Polonnaruwa"
+    },
+    {
+      "registration": "TK-00208",
+      "province": "North Central",
+      "district": "Polonnaruwa"
+    },
+    {
+      "registration": "TK-00209",
+      "province": "North Central",
+      "district": "Polonnaruwa"
+    },
+    {
+      "registration": "TK-00210",
+      "province": "North Central",
+      "district": "Polonnaruwa"
+    },
+    {
+      "registration": "TK-00211",
+      "province": "Uva",
+      "district": "Badulla"
+    },
+    {
+      "registration": "TK-00212",
+      "province": "Uva",
+      "district": "Badulla"
+    },
+    {
+      "registration": "TK-00213",
+      "province": "Uva",
+      "district": "Badulla"
+    },
+    {
+      "registration": "TK-00214",
+      "province": "Uva",
+      "district": "Badulla"
+    },
+    {
+      "registration": "TK-00215",
+      "province": "Uva",
+      "district": "Badulla"
+    },
+    {
+      "registration": "TK-00216",
+      "province": "Uva",
+      "district": "Badulla"
+    },
+    {
+      "registration": "TK-00217",
+      "province": "Uva",
+      "district": "Badulla"
+    },
+    {
+      "registration": "TK-00218",
+      "province": "Uva",
+      "district": "Badulla"
+    },
+    {
+      "registration": "TK-00219",
+      "province": "Uva",
+      "district": "Badulla"
+    },
+    {
+      "registration": "TK-00220",
+      "province": "Uva",
+      "district": "Badulla"
+    },
+    {
+      "registration": "TK-00221",
+      "province": "Uva",
+      "district": "Monaragala"
+    },
+    {
+      "registration": "TK-00222",
+      "province": "Uva",
+      "district": "Monaragala"
+    },
+    {
+      "registration": "TK-00223",
+      "province": "Uva",
+      "district": "Monaragala"
+    },
+    {
+      "registration": "TK-00224",
+      "province": "Uva",
+      "district": "Monaragala"
+    },
+    {
+      "registration": "TK-00225",
+      "province": "Uva",
+      "district": "Monaragala"
+    },
+    {
+      "registration": "TK-00226",
+      "province": "Uva",
+      "district": "Monaragala"
+    },
+    {
+      "registration": "TK-00227",
+      "province": "Uva",
+      "district": "Monaragala"
+    },
+    {
+      "registration": "TK-00228",
+      "province": "Uva",
+      "district": "Monaragala"
+    },
+    {
+      "registration": "TK-00229",
+      "province": "Uva",
+      "district": "Monaragala"
+    },
+    {
+      "registration": "TK-00230",
+      "province": "Uva",
+      "district": "Monaragala"
+    },
+    {
+      "registration": "TK-00231",
+      "province": "Sabaragamuwa",
+      "district": "Ratnapura"
+    },
+    {
+      "registration": "TK-00232",
+      "province": "Sabaragamuwa",
+      "district": "Ratnapura"
+    },
+    {
+      "registration": "TK-00233",
+      "province": "Sabaragamuwa",
+      "district": "Ratnapura"
+    },
+    {
+      "registration": "TK-00234",
+      "province": "Sabaragamuwa",
+      "district": "Ratnapura"
+    },
+    {
+      "registration": "TK-00235",
+      "province": "Sabaragamuwa",
+      "district": "Ratnapura"
+    },
+    {
+      "registration": "TK-00236",
+      "province": "Sabaragamuwa",
+      "district": "Ratnapura"
+    },
+    {
+      "registration": "TK-00237",
+      "province": "Sabaragamuwa",
+      "district": "Ratnapura"
+    },
+    {
+      "registration": "TK-00238",
+      "province": "Sabaragamuwa",
+      "district": "Ratnapura"
+    },
+    {
+      "registration": "TK-00239",
+      "province": "Sabaragamuwa",
+      "district": "Ratnapura"
+    },
+    {
+      "registration": "TK-00240",
+      "province": "Sabaragamuwa",
+      "district": "Ratnapura"
+    },
+    {
+      "registration": "TK-00241",
+      "province": "Sabaragamuwa",
+      "district": "Kegalle"
+    },
+    {
+      "registration": "TK-00242",
+      "province": "Sabaragamuwa",
+      "district": "Kegalle"
+    },
+    {
+      "registration": "TK-00243",
+      "province": "Sabaragamuwa",
+      "district": "Kegalle"
+    },
+    {
+      "registration": "TK-00244",
+      "province": "Sabaragamuwa",
+      "district": "Kegalle"
+    },
+    {
+      "registration": "TK-00245",
+      "province": "Sabaragamuwa",
+      "district": "Kegalle"
+    },
+    {
+      "registration": "TK-00246",
+      "province": "Sabaragamuwa",
+      "district": "Kegalle"
+    },
+    {
+      "registration": "TK-00247",
+      "province": "Sabaragamuwa",
+      "district": "Kegalle"
+    },
+    {
+      "registration": "TK-00248",
+      "province": "Sabaragamuwa",
+      "district": "Kegalle"
+    },
+    {
+      "registration": "TK-00249",
+      "province": "Sabaragamuwa",
+      "district": "Kegalle"
+    },
+    {
+      "registration": "TK-00250",
+      "province": "Sabaragamuwa",
+      "district": "Kegalle"
+    }
+  ],
+  "sampleLocationLogs": [
+    {
+      "tukTukId": "69feb3a3e186d87e7dbd8f35",
+      "latitude": 6.908638770153904,
+      "longitude": 79.84487842585723,
+      "timestamp": "2026-05-01T18:30:00.000Z",
+      "speed": 21,
+      "accuracy": 1,
+      "_id": "69feb3a4e186d87e7dbd9030",
+      "__v": 0
+    },
+    {
+      "tukTukId": "69feb3a3e186d87e7dbd8f35",
+      "latitude": 6.936912498640079,
+      "longitude": 79.83309603973855,
+      "timestamp": "2026-05-01T22:30:00.000Z",
+      "speed": 25,
+      "accuracy": 6,
+      "_id": "69feb3a4e186d87e7dbd9031",
+      "__v": 0
+    },
+    {
+      "tukTukId": "69feb3a3e186d87e7dbd8f35",
+      "latitude": 6.9334808417941565,
+      "longitude": 79.84006152972105,
+      "timestamp": "2026-05-02T02:30:00.000Z",
+      "speed": 28,
+      "accuracy": 2,
+      "_id": "69feb3a4e186d87e7dbd9032",
+      "__v": 0
+    },
+    {
+      "tukTukId": "69feb3a3e186d87e7dbd8f35",
+      "latitude": 6.933611312505547,
+      "longitude": 79.8258926819603,
+      "timestamp": "2026-05-02T06:30:00.000Z",
+      "speed": 44,
+      "accuracy": 3,
+      "_id": "69feb3a4e186d87e7dbd9033",
+      "__v": 0
+    },
+    {
+      "tukTukId": "69feb3a3e186d87e7dbd8f35",
+      "latitude": 6.934443228676642,
+      "longitude": 79.82524925565227,
+      "timestamp": "2026-05-02T10:30:00.000Z",
+      "speed": 11,
+      "accuracy": 7,
+      "_id": "69feb3a4e186d87e7dbd9034",
+      "__v": 0
+    },
+    {
+      "tukTukId": "69feb3a3e186d87e7dbd8f35",
+      "latitude": 6.9126566755914824,
+      "longitude": 79.79911271086644,
+      "timestamp": "2026-05-02T14:30:00.000Z",
+      "speed": 38,
+      "accuracy": 5,
+      "_id": "69feb3a4e186d87e7dbd9035",
+      "__v": 0
+    },
+    {
+      "tukTukId": "69feb3a3e186d87e7dbd8f35",
+      "latitude": 6.893002771550685,
+      "longitude": 79.8255571764048,
+      "timestamp": "2026-05-02T18:30:00.000Z",
+      "speed": 35,
+      "accuracy": 4,
+      "_id": "69feb3a4e186d87e7dbd9036",
+      "__v": 0
+    },
+    {
+      "tukTukId": "69feb3a3e186d87e7dbd8f35",
+      "latitude": 6.91372067098492,
+      "longitude": 79.82784158203359,
+      "timestamp": "2026-05-02T22:30:00.000Z",
+      "speed": 31,
+      "accuracy": 7,
+      "_id": "69feb3a4e186d87e7dbd9037",
+      "__v": 0
+    },
+    {
+      "tukTukId": "69feb3a3e186d87e7dbd8f35",
+      "latitude": 6.90908495447359,
+      "longitude": 79.82012378131122,
+      "timestamp": "2026-05-03T02:30:00.000Z",
+      "speed": 35,
+      "accuracy": 5,
+      "_id": "69feb3a4e186d87e7dbd9038",
+      "__v": 0
+    },
+    {
+      "tukTukId": "69feb3a3e186d87e7dbd8f35",
+      "latitude": 6.9034290664100695,
+      "longitude": 79.83097563201262,
+      "timestamp": "2026-05-03T06:30:00.000Z",
+      "speed": 46,
+      "accuracy": 9,
+      "_id": "69feb3a4e186d87e7dbd9039",
+      "__v": 0
+    }
+  ]
+}
