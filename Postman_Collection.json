@@ -1,10 +1,60 @@
 {
   "info": {
     "name": "Tuk-Tuk Tracking API",
-    "description": "Real-Time Three-Wheeler Tracking & Movement Logging System for Sri Lanka Police",
+    "description": "Real-Time Three-Wheeler Tracking & Movement Logging System for Sri Lanka Police.\n\n**HOW TO USE:**\n1. Set the `base_url` variable to your server (localhost or Railway URL).\n2. Run 'Login - Admin' or 'Login User' first — the JWT token is saved automatically.\n3. All other requests will use the token automatically.\n\n**Seeded Admin:** admin@tuktuking.com / Admin@123",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000",
+      "type": "string",
+      "description": "Change this to your Railway URL for live testing: https://tuk-web-api-production.up.railway.app"
+    },
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string",
+      "description": "Auto-populated after Login request."
+    },
+    {
+      "key": "tuk_tuk_id",
+      "value": "",
+      "type": "string",
+      "description": "Set this to a valid Tuk-Tuk MongoDB ObjectId after fetching all tuk-tuks."
+    }
+  ],
   "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            },
+            "description": "Check if the API server is running."
+          }
+        },
+        {
+          "name": "API Root",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": ["{{base_url}}"],
+              "path": [""]
+            }
+          }
+        }
+      ]
+    },
     {
       "name": "Authentication",
       "item": [
@@ -13,64 +63,110 @@
           "request": {
             "method": "POST",
             "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
+              { "key": "Content-Type", "value": "application/json" }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"username\": \"policeofficer001\",\n  \"email\": \"officer@police.lk\",\n  \"password\": \"SecurePass123!\",\n  \"role\": \"police_officer\",\n  \"province\": \"Western\",\n  \"district\": \"Colombo\"\n}"
+              "raw": "{\n  \"username\": \"policeofficer001\",\n  \"email\": \"officer@police.lk\",\n  \"password\": \"SecurePass123!\",\n  \"role\": \"police_officer\",\n  \"province\": \"Western\",\n  \"district\": \"Colombo\"\n}",
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
-              "raw": "http://localhost:5000/api/auth/register",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "5000",
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
               "path": ["api", "auth", "register"]
-            }
+            },
+            "description": "Register a new police officer user."
           }
         },
         {
-          "name": "Login User",
+          "name": "Login - Admin (Auto-saves Token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const responseJson = pm.response.json();",
+                  "    const token = responseJson.data?.token || responseJson.token;",
+                  "    if (token) {",
+                  "        pm.collectionVariables.set('jwt_token', token);",
+                  "        console.log('JWT token saved automatically!');",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
+              { "key": "Content-Type", "value": "application/json" }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"officer@police.lk\",\n  \"password\": \"SecurePass123!\"\n}"
+              "raw": "{\n  \"email\": \"admin@tuktuking.com\",\n  \"password\": \"Admin@123\"\n}",
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
-              "raw": "http://localhost:5000/api/auth/login",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "5000",
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
               "path": ["api", "auth", "login"]
-            }
+            },
+            "description": "Login with the seeded admin account. JWT token is automatically saved to the collection variable."
           }
         },
         {
-          "name": "Get Profile",
+          "name": "Login - Operator (Auto-saves Token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const responseJson = pm.response.json();",
+                  "    const token = responseJson.data?.token || responseJson.token;",
+                  "    if (token) {",
+                  "        pm.collectionVariables.set('jwt_token', token);",
+                  "        console.log('JWT token saved automatically!');",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"operator1@tuktuking.com\",\n  \"password\": \"Operator@123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Login with a seeded operator account."
+          }
+        },
+        {
+          "name": "Get My Profile",
           "request": {
             "method": "GET",
             "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{jwt_token}}"
-              }
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
             ],
             "url": {
-              "raw": "http://localhost:5000/api/auth/profile",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "5000",
+              "raw": "{{base_url}}/api/auth/profile",
+              "host": ["{{base_url}}"],
               "path": ["api", "auth", "profile"]
-            }
+            },
+            "description": "Get the currently logged-in user's profile."
           }
         }
       ]
@@ -79,49 +175,64 @@
       "name": "Tuk-Tuk Management",
       "item": [
         {
-          "name": "Register Tuk-Tuk (Admin)",
+          "name": "Register Tuk-Tuk (Admin only)",
           "request": {
             "method": "POST",
             "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{jwt_token}}"
-              }
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"registrationNumber\": \"WB-ABC-1234\",\n  \"ownerName\": \"Tuk Owner Name\",\n  \"province\": \"Western\",\n  \"district\": \"Colombo\",\n  \"lastKnownLocation\": {\n    \"latitude\": 6.9271,\n    \"longitude\": 80.7789\n  }\n}"
+              "raw": "{\n  \"registrationNumber\": \"WB-NEW-9999\",\n  \"ownerName\": \"Kamal Perera\",\n  \"province\": \"Western\",\n  \"district\": \"Colombo\",\n  \"lastKnownLocation\": {\n    \"latitude\": 6.9271,\n    \"longitude\": 79.8612\n  }\n}",
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
-              "raw": "http://localhost:5000/api/tuk-tuks/register",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "5000",
+              "raw": "{{base_url}}/api/tuk-tuks/register",
+              "host": ["{{base_url}}"],
               "path": ["api", "tuk-tuks", "register"]
-            }
+            },
+            "description": "Register a new tuk-tuk. Requires admin JWT token."
           }
         },
         {
-          "name": "Get All Tuk-Tuks",
+          "name": "Get All Tuk-Tuks (Paginated)",
           "request": {
             "method": "GET",
             "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{jwt_token}}"
-              }
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
             ],
             "url": {
-              "raw": "http://localhost:5000/api/tuk-tuks",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "5000",
-              "path": ["api", "tuk-tuks"]
-            }
+              "raw": "{{base_url}}/api/tuk-tuks?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tuk-tuks"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            },
+            "description": "Get all tuk-tuks with pagination. Use sort=province or sort=-registrationNumber."
+          }
+        },
+        {
+          "name": "Get All Tuk-Tuks (Sorted + Filtered)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/tuk-tuks?page=1&limit=20&sort=province&province=Western",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tuk-tuks"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" },
+                { "key": "sort", "value": "province" },
+                { "key": "province", "value": "Western" }
+              ]
+            },
+            "description": "Advanced query: filter by province and sort results."
           }
         },
         {
@@ -129,55 +240,71 @@
           "request": {
             "method": "GET",
             "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{jwt_token}}"
-              }
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
             ],
             "url": {
-              "raw": "http://localhost:5000/api/tuk-tuks/{{tuk_tuk_id}}",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "5000",
+              "raw": "{{base_url}}/api/tuk-tuks/{{tuk_tuk_id}}",
+              "host": ["{{base_url}}"],
               "path": ["api", "tuk-tuks", "{{tuk_tuk_id}}"]
-            }
+            },
+            "description": "Get a single tuk-tuk by its MongoDB ID. Set the tuk_tuk_id variable first."
           }
         },
         {
-          "name": "Filter by Province",
+          "name": "Filter by Province - Western",
           "request": {
             "method": "GET",
             "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{jwt_token}}"
-              }
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
             ],
             "url": {
-              "raw": "http://localhost:5000/api/tuk-tuks/filter/province/Western",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "5000",
+              "raw": "{{base_url}}/api/tuk-tuks/filter/province/Western",
+              "host": ["{{base_url}}"],
               "path": ["api", "tuk-tuks", "filter", "province", "Western"]
+            },
+            "description": "Get all tuk-tuks in Western Province."
+          }
+        },
+        {
+          "name": "Filter by Province - Northern",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/tuk-tuks/filter/province/Northern",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tuk-tuks", "filter", "province", "Northern"]
             }
           }
         },
         {
-          "name": "Filter by District",
+          "name": "Filter by District - Colombo",
           "request": {
             "method": "GET",
             "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{jwt_token}}"
-              }
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
             ],
             "url": {
-              "raw": "http://localhost:5000/api/tuk-tuks/filter/district/Colombo",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "5000",
+              "raw": "{{base_url}}/api/tuk-tuks/filter/district/Colombo",
+              "host": ["{{base_url}}"],
               "path": ["api", "tuk-tuks", "filter", "district", "Colombo"]
+            },
+            "description": "Get all tuk-tuks in the Colombo district."
+          }
+        },
+        {
+          "name": "Filter by District - Kandy",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/tuk-tuks/filter/district/Kandy",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tuk-tuks", "filter", "district", "Kandy"]
             }
           }
         }
@@ -187,74 +314,82 @@
       "name": "Real-Time Tracking",
       "item": [
         {
+          "name": "Get Real-Time Location",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/tuk-tuks/{{tuk_tuk_id}}/real-time-location",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tuk-tuks", "{{tuk_tuk_id}}", "real-time-location"]
+            },
+            "description": "Get the last known GPS location of a specific tuk-tuk."
+          }
+        },
+        {
           "name": "Update Tuk-Tuk Location",
           "request": {
             "method": "PUT",
             "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{jwt_token}}"
-              }
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"latitude\": 6.9275,\n  \"longitude\": 80.7795,\n  \"speed\": 45,\n  \"accuracy\": 5\n}"
+              "raw": "{\n  \"latitude\": 6.9275,\n  \"longitude\": 79.8620,\n  \"speed\": 35,\n  \"accuracy\": 5\n}",
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
-              "raw": "http://localhost:5000/api/tuk-tuks/{{tuk_tuk_id}}/update-location",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "5000",
+              "raw": "{{base_url}}/api/tuk-tuks/{{tuk_tuk_id}}/update-location",
+              "host": ["{{base_url}}"],
               "path": ["api", "tuk-tuks", "{{tuk_tuk_id}}", "update-location"]
-            }
+            },
+            "description": "Simulate a GPS ping from a tuk-tuk device. Updates last known location and logs to history."
           }
         },
         {
-          "name": "Get Movement History",
+          "name": "Get Movement History (All Time)",
           "request": {
             "method": "GET",
             "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{jwt_token}}"
-              }
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
             ],
             "url": {
-              "raw": "http://localhost:5000/api/tuk-tuks/{{tuk_tuk_id}}/movement-history?startDate=2026-04-20&endDate=2026-04-25",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "5000",
+              "raw": "{{base_url}}/api/tuk-tuks/{{tuk_tuk_id}}/movement-history?page=1&limit=20",
+              "host": ["{{base_url}}"],
               "path": ["api", "tuk-tuks", "{{tuk_tuk_id}}", "movement-history"],
               "query": [
-                {
-                  "key": "startDate",
-                  "value": "2026-04-20"
-                },
-                {
-                  "key": "endDate",
-                  "value": "2026-04-25"
-                }
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" }
               ]
-            }
+            },
+            "description": "Get paginated movement history for a tuk-tuk."
+          }
+        },
+        {
+          "name": "Get Movement History (Date Range)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/tuk-tuks/{{tuk_tuk_id}}/movement-history?startDate=2026-05-02&endDate=2026-05-09&page=1&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tuk-tuks", "{{tuk_tuk_id}}", "movement-history"],
+              "query": [
+                { "key": "startDate", "value": "2026-05-02" },
+                { "key": "endDate", "value": "2026-05-09" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" }
+              ]
+            },
+            "description": "Get movement history filtered by a specific date range (the last 7 days of seeded data)."
           }
         }
       ]
-    }
-  ],
-  "variable": [
-    {
-      "key": "jwt_token",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "tuk_tuk_id",
-      "value": "",
-      "type": "string"
     }
   ]
 }
